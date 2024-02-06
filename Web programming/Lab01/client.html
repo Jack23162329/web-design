@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="client.css" type="text/css" rel="stylesheet">
+    <script src="client.js"></script>
+    <script src="serverstub.js" type="text/javascript"></script>
+    <title>Welcome</title>
+    
+    <script type = "text/view" id = "profileview">
+        <style>
+            body{
+                padding: 0;
+                margin: 0;
+                background-image: url("bgimage6.png");
+                background-position: center;
+                background-size: cover;
+            }
+        </style>
+        
+        <ul class = "tabs">
+            <li data-tab-target = "#home" class = "active tab">Home</li>
+            <li data-tab-target = "#Browse" class = "tab">Browse</li>
+            <li data-tab-target = "#account" class = "tab">Account</li>
+        </ul>
+        
+        <div class="tab-content">
+            <div id = "home" data-tab-content class = "active">
+                <h1>Home</h1>
+                <p>This is the home</p>
+            </div>
+            <div id = "Browse" data-tab-content>
+                <h1>Browsing</h1>
+                <p>This is browse</p>
+            </div>
+            <div id = "account" data-tab-content>
+                
+                <h1>Account</h1>
+                <div class="mistake" id = "mistake"></div>
+
+                <!-- <div class="change-password"> -->
+                    <form action = "#" onsubmit = "changePassword(this); return false;">
+                        <div class = "password">
+                            
+                            <input id = "oldpassword" type = "password" required>
+                            <label for = "oldpassword">Old Password</label>
+                            
+                        </div>
+                        <div class = "password">
+                            
+                            <input id = "newpassword" type = "password" required>
+                            <label for = "newpassword">New Password</label>
+                            
+                        </div>
+
+                        <input type = "submit" class = "bottom"  value = "Confirm Password">
+                    </form>
+                </div>
+            </div>
+        </div> 
+        
+    </script>    
+    <script id = "welcomeview" type = "text/view">
+        
+        <h2 id = "signup"></h2>
+        <div class = "message" id = "message"></div>
+        <div class = "wrapper" >
+            <div class = "input-box-logo">
+                <img src = "wimage.png" width = "340" height = "400" alt = "It's a logo!">
+            </div>
+            <div class = "input-box">
+                <div class = "input-box-login">
+                    <form action = "#" onsubmit = "signin(this)">
+                    <label for = "email">Email</label>
+                        <input id = "email" type = "email" name = "email" required placeholder = "your email" >
+                    <label for = "password">Password</label>
+                        <input id = "password" type = "password" name = "password" required placeholder = "your password" >
+                        <input type = "submit"  class = "btn" value = "log in" >
+                    </form>
+                </div>
+    
+                <div class = "input-box-signup">
+                    <form action = "#" onsubmit="validation(this);return false;">
+                    <h3 class = "sign">Sign up here</h3>
+                    <label for ="name">First name</label>
+                        <input id = "name" type = "text" name = "Name" required>
+                    <label for = "F_name">Family name </label>
+                        <input id = "F_name" type = "text" name = "Name" required >
+                    <label>Gender</label>
+                    <select id = "gender">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                    
+                    <label for = "city">City</label>
+                        <input id = "city" type = "text" name = "city" required>
+                    <label for = "Country">Country</label>
+                        <input id =  "Country" type = "text" name = "Country" required>
+                    <label for = "s_email">Email</label>
+                        <input id = "s_email" type = "email" name = "email" required>
+                    <label for = "s_password">password</label>
+                        <input id = "s_password" type = "password" name = "password" required minLength = "7">
+                    <label for = "c_password">Repeat PSW</label>
+                        <input id = "c_password" type = "password" name = "confirm_password" required minLength = "7">
+                        <input type = "submit" class = "btn" value = "sign up" >
+                    </form>
+                </div>
+                
+            </div> 
+        </div>
+    </script>
+
+<body>
+    
+</body>
+</html>

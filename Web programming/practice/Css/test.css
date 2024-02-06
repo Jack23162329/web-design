@@ -1,0 +1,11 @@
+#navigation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    float:left
+}
+
+#content {
+    margin-left: 200px;
+}

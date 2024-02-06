@@ -1,0 +1,26 @@
+
+form {
+  border: 1px solid gray;
+  width: 400px;
+  height:100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+  background-color: lightgray;
+}
+
+form div{
+  float: left;
+  width: 100%;
+}
+div input{
+    width: 100%;
+}
+
+#result{
+  border: 1px solid gray;
+  width: 400px;
+  height: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}

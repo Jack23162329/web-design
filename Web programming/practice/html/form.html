@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Form</title>
+</head>
+<body>
+    <form action = "contactus.php" method="post">
+    <p>Name:</p>
+    <p><input type="text" name="name" value="Your name"></p>
+
+    <p>Species:</p>
+    <p><input name="species"></p>
+    <!-- remember: 'type="text"' isn't actually necessary -->
+
+    <p>Comments: </p>
+    <p><textarea name="comments" rows="5" cols="20">Your comments</textarea></p>
+
+    <p>Are you:</p>
+    <p><input type="radio" name="areyou" value="male"> Male</p>
+    <p><input type="radio" name="areyou" value="female"> Female</p>
+    <p><input type="radio" name="areyou" value="hermaphrodite"> An hermaphrodite</p>
+    <p><input type="radio" name="areyou" value="asexual"> Asexual</p>
+
+    <p><input type="submit"></p>
+
+    </form>
+</body>
+
+</html>

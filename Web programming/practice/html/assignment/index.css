@@ -1,0 +1,20 @@
+#save-form{
+    width: 400px;
+    height: 300px;
+    border: 1px solid black;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 200px;
+}
+#save-form div{
+    width:100%;
+}
+
+#save-form div label{
+    width: 30%;
+    float: left;
+}
+
+#save-form div input{
+    width: 70%;
+}
