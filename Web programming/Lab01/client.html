@@ -31,17 +31,40 @@
                 <div class="home">
 
                     <form action = "#" onsubmit = "showmessage(); return false;">
+                    <div class="information">
+                        <p>Name: <span id = "Name"></span><p>
+                        <p>gender: <span id = "gender"></span><p>
+                        <p>City: <span id = "city"></span><p>
+                        <p>Country: <span id = "Country"></span><p>
+                        <p>Email: <span id = "Email"></span><p>
+                    </div>
+                    
 
-                    <p>Name: <span id = "Name"></span><p>
-                    <p>gender: <span id = "gender"></span><p>
-                    <p>City: <span id = "city"></span><p>
-                    <p>Country: <span id = "Country"></span><p>
-                    <p>Email: <span id = "Email"></span><p>
-
-                    <div class="wall" id = "output_wall"></div>
-                    <textarea id = "textarea" class = "textarea" row ="10" cols = "50"></textarea>
+                    <div class="wall" id = "output_wall">
+                        <div class="message my_message">
+                            <p>Hi<br><span>12:15</span></p>
+                        </div>
+                        <div class="message frnd_message">
+                            <p>Hello<br><span>12:15</span></p>
+                        </div>
+                        <div class="message my_message">
+                            <p>yabi<br><span>12:15</span></p>
+                        </div>
+                        <div class="message frnd_message">
+                            <p>Hello<br><span>12:15</span></p>
+                        </div>
+                        <div class="message frnd_message">
+                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi expedita in ut quasi laboriosa <br><span>12:15</span></p>
+                        </div>
+                        
+                    </div>
+                    
+                    <textarea id = "textarea" class = "textarea" row ="10" cols = "50" placeholder = "Write sth here😊"></textarea>
                     <input type = "submit" class = "bottom3" id = "bottom3" value = "upload">
                     </form>
+                    <span id = icon-4 class = "icon">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                    </span>
 
                 </div>
                 
@@ -84,8 +107,11 @@
                         
                         </div>
                         <input type = "submit" class = "bottom"  value = "Confirm Passwords">
-                        <input id = "signout" type = "submit" class = "bottom2" value = "Sign out">
+                        
                     </form>
+                    
+                    <input id = "signout" type = "submit" class = "bottom2" value = "Sign out">
+
                 </div>
             </div>
         </div> 
@@ -101,7 +127,7 @@
             </div>
             <div class = "input-box">
                 <div class = "input-box-login">
-                    <form action = "#" onsubmit = "signin(this)">
+                    <form action = "#" onsubmit = "signin(this);return false;">
                     <label for = "email">Email</label>
                         <input id = "email" type = "email" name = "email" required placeholder = "your email" >
                     <label for = "password">Password</label>

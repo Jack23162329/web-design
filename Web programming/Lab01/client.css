@@ -26,7 +26,7 @@ body{
 }
 .input-box-logo{
     /* display:inline-block; */
-    background-color: white;
+    background-color: #fff;
     padding: 0px;
     height: 100%;
     width: 340px;
@@ -35,7 +35,7 @@ body{
 }
 .input-box{
     
-    background-color: white;
+    background-color: #fff;
     /* text-align: left; */
     /* margin-top: 100px; */
     height: 380px;
@@ -46,7 +46,7 @@ body{
 }
 .input-box-login{
     margin-top:20px;
-    background-color: white;
+    background-color: #fff;
     height: 18%;
     width: 100%;
     padding:0px;
@@ -138,7 +138,7 @@ h2{
 }
 /* 
 .tab-content h4{
-    color: white;
+    color: #fff;
     display:block;
     transform: translate(-500px);
 } */
@@ -215,12 +215,12 @@ h2{
 
 
 .tab-content h1, p{
-    color: white;
+    color: #fff;
     font-size: 1.5em;
 }
 
 .tab-content .mistake{
-    color: white;
+    color: #fff;
     font-size: 1em;
 }
 .password input{
@@ -230,7 +230,7 @@ h2{
     border-bottom: 2px solid #fff;
     outline:none;
     font-size: 1.1em;
-    color: white;
+    color: #fff;
     font-weight: 500;
     padding: 5px 25px 0 5px;
     letter-spacing: 0.2ch;
@@ -256,7 +256,7 @@ h2{
     left: 5px;
     /* transform: translateY(-50%); */
     font-size: 1.3em;
-    color: white;
+    color: #fff;
     font-weight: 500;
     pointer-events: none;
     transition: .5s;
@@ -273,7 +273,7 @@ h2{
     height: 80px;
     background: transparent;
     border: 2px solid #fff;
-    color: white;
+    color: #fff;
     outline: none;
     border-radius: 6px;
     cursor: pointer;
@@ -290,7 +290,7 @@ h2{
     height: 50px;
     background: transparent;
     border: 2px solid #fff;
-    color: white;
+    color: #fff;
     outline: none;
     border-radius: 6px;
     cursor: pointer;
@@ -306,7 +306,7 @@ h2{
     height: 50px;
     background: transparent;
     border: 2px solid #fff;
-    color: white;
+    color: #fff;
     outline: none;
     border-radius: 6px;
     cursor: pointer;
@@ -317,48 +317,141 @@ h2{
     transform: translate(-118%, 100%);
 }
 .bottom:hover{
-    background: white;
+    background: #fff;
     color: #162938;
 }
 .bottom2:hover{
-    background: white;
+    background: #fff;
     color: #162938;
 }
 .bottom3:hover{
-    background: white;
+    background: #fff;
     color: #162938;
 }
 .password span{
     position:absolute;
-    color: white;
+    color: #fff;
     transform: translate(500px, 100%);
     cursor: pointer;
 
 
 }
-.home p{
+.home .information{
     transform: translate(-400px);
-    font-size: 1.3em;
+    font-size: 0.9em;
     align-content:center;
+    width:100%;
 }
+.message{
+    
+    position:relative;
+    display: flex;
+    width: 98%;
+    margin: 5px 0;
+
+}
+
+.message p{
+    position: relative;
+    right: 0;
+    text-align: right;
+    max-width: 65%;
+    padding: 12px;
+    background: #dcf8c6;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid white;
+    font-size: 0.9em;
+    color: white;
+}
+.message p::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    /* transform: translateX(10px); */
+    /* background: linear-gradient(135deg, white 0%, white 50%,transparent 50%, transparent); */
+}
+.message p span{
+    display: block;
+    margin-top: 5px;
+    font-size: 1em;
+    opacity: 2;
+    color:white;
+}
+.my_message{
+    justify-content: flex-end;  
+}
+
+.frnd_message{
+    justify-content: flex-start;
+}
+.frnd_message p 
+{
+    background: transparent;
+    border: 1px solid white;
+    text-align: left;
+}
+.message.frnd_message p::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: 20px;
+    height: 20px;
+    /* transform: translateX(-40px);
+    background: linear-gradient(225deg, #fff 0%, #fff 50%,transparent 50%, transparent);
+     */
+}
+
 .wall{
     position:absolute;
     width: 730px;
     height: 400px;
     transform: translate(80px, -220px);
     background-color: transparent;
-    border: 5px white solid;
+    border: 5px #fff solid;
     border-radius: 5px;
-    color: white;
+    color: #fff;
+    text-align: left;
+    overflow: auto;
+    
 }
+
+    
+
 
 .textarea{
     height:50px;
     transform: translate(-100%, 50%);
     background-color: transparent;
-    border: 5px white solid;
-    color: white;
+    border: 5px #fff solid;
+    color: #fff;
+    border-radius: 10px;
     
 }
 
+.icon{
+    position:absolute;
+    top: 0;
+    right:0;
+    width: 45px;
+    height: 45px;
+    background: #162938;
+    font-size: 2em;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
 
+
+}
+.icon:hover{
+    background-color: #fff;
+    color: #162938;
+}
