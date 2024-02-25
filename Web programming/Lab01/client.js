@@ -1,27 +1,42 @@
-displayView = function(){
-    // the code required to display a view
-    }
+// displayView = function(){
+//     // the code required to display a view
+//     }
+
+
+let userInfo;
+let toEmail = null
+
 
 window.onload = function(){
-    var welcome = document.getElementById("welcomeview")
-    var profile = document.getElementById("profileview")
     var token = localStorage.getItem("token")
-    
 
     if(token){
-        document.body.innerHTML = profile.innerHTML
+        View("profileview")
         displaypage()
         
     }else{
-        document.body.innerHTML = welcome.innerHTML
+        View("welcomeview")
     }
     // var profile = document.getElementById("welcomeview")
     //code that is executed as the page is loaded.
     //You shall put your own custom code here.
     //window.alert() is not allowed to be used in your implementation.
     // window.alert("Hello TDDD97!")
-    
+
 }
+//inorder to get user information easier
+function getData(token) {
+    var userDataResponse = serverstub.getUserDataByToken(token)
+    return userData = userDataResponse.data
+}
+
+//so that we don't have to type it everytime, make the code clear!
+function View(name){
+    var viewcontent = document.getElementById(name)
+    document.body.innerHTML = viewcontent.innerHTML
+}
+
+// inorder to change different page by using the tab system
 function attachTab(){
     const tabs = document.querySelectorAll('[data-tab-target]')
         const tabContents = document.querySelectorAll('[data-tab-content]')
@@ -94,7 +109,6 @@ function validation(formData){
 function signin(formData){
 
     event.preventDefault()
-    var profile = document.getElementById("profileview")
     var signup = document.getElementById("signup")
     var email = formData.email.value
     var password = formData.password.value
@@ -113,12 +127,14 @@ function signin(formData){
     }
 }
 function displaypage(){
-    var profile = document.getElementById("profileview")
-    document.body.innerHTML = profile.innerHTML 
+
+    View("profileview")
     displayHometab()
     displayaccountpage()
     attachTab()
 }
+
+// let the page won't log out each time we refresh it~~
 function displayaccountpage(){
     
     var visibility = document.getElementById("icon")
@@ -161,25 +177,25 @@ function displayHometab(){
 }
 
 function signout(){
-        var welcome = document.getElementById("welcomeview")
         var token = localStorage.getItem("token")
         localStorage.removeItem("token")
         console.log(token)
         var sign_out = serverstub.signOut(token)
 
         if(sign_out.success === true){
-            document.body.innerHTML = welcome.innerHTML
+            View("welcomeview")
             message.textContent = sign_out.message
         }else{
-            document.body.innerHTML = profile.innerHTML
+            View("profileview")
         }        
     }
-
+// changing the password
 function changePassword(formData){
     var oldPassword = formData.oldpassword.value
     var newPassword = formData.newpassword.value
     var confirm_password = formData.confirmpassword.value
 
+    // inorder the show the wrong message
     var mistake = document.getElementById("mistake")
     var token = localStorage.getItem("token")
     
@@ -205,27 +221,102 @@ function changePassword(formData){
 
 }
 
-function showmessage(formData){
-    var text = document.getElementById("textarea")
-    var output = document.getElementById("output_wall")
-    // var token = localStorage.getItem("token")
+function uploadmessage(msgId) {
+    //get post message content
+    let message = document.getElementById(msgId).value
+    var token = localStorage.getItem("token")
+    getData(token)
+    
+    if (message == "") {
+        return
+    }
+    let email
 
-    
+    if (msgId === postOwnMessage) {
+        email = userData.email
 
-    // const Post = serverstub.postMessage(token, text)
-    
-    
-    // if (Post.success === true && text != ""){
-        console.log(text)
-        
-        output.innerHTML = text.value + output.innerHTML
-        
-    // }
-    // else{
-    //     console.log('Failed to post message:',Post.message )
-    // }
-    
+    }
+    else {
+        email = toEmail
+    }
+    let result = serverstub.postMessage(token, message, email)
+    console.log(email)
+    if (result.success === true) {
+        console.log(result.message)
+        document.getElementById(msgId).value = ""
+    }
 }
+
+
+// const refresh = document.querySelector('.bottom4')
+// refresh.addEventListener('click',() => {
+//     refreshbottom()
+// })
+
+function refreshbottom(wallId, dare){
+    var token = localStorage.getItem('token')
+    getData(token)
+    
+    console.log(userData)
+    let email 
+    if(dare == 'ownWall'){
+        email = userData.email
+    }
+    else if(dare == 'otherWall'){
+        email = toEmail;
+    }
+    var result = serverstub.getUserMessagesByEmail(token, email)
+
+    if(result.success === true) {
+        var postarea = document.getElementById(wallId)
+        removeAllChildElement(postarea)
+
+        var final_result = result.data
+        for (i = 0; i < final_result.length; i++) {
+            var container = document.createElement('div')
+            container.className = "container"
+            // for email
+            var writer = document.createElement('p')
+            writer.className = "writer"
+            writer.innerHTML = final_result[i].writer
+            container.appendChild(writer)
+            // for messages
+            var content = document.createElement('p')
+            content.className = "content"
+            content.innerHTML = final_result[i].content
+            container.appendChild(content)
+            postarea.appendChild(container)
+
+            // 換行問題~~
+
+        }
+    }
+}
+
+function search_users(formData)
+{
+    var token = localStorage.getItem("token")
+    var useremail = formData.searching.value;
+    console.log("input", useremail)
+    user = serverstub.getUserDataByToken(token)
+    if(user.success === true)
+    {
+        toEmail = useremail
+        var browseview = document.getElementById("otherwall")
+        browseview.style.display = "block"
+        displayHometab()
+        
+    }
+}
+function removeAllChildElement(pElement) {
+    while (pElement.firstChild) {
+        pElement.removeChild(pElement.firstChild)
+    }
+}
+
+
+// for the invisibility of the passwords
+
 function togglevisibility(){
     const oldpassword = document.getElementById("oldpassword")
     if (oldpassword.type === "password"){

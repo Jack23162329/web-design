@@ -316,6 +316,26 @@ h2{
     transition:.5s;
     transform: translate(-118%, 100%);
 }
+.refresh-bottom{
+    margin-top: 5px;
+    width: 70%;
+    height: 50px;
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.3em;
+    font-weight: 500;
+    font-style:oblique;
+    transition:.5s;
+    transform: translate(-118%, 100%);
+}
+.refresh-bottom:hover{
+    background: #fff;
+    color: black;
+}
 .bottom:hover{
     background: #fff;
     color: #162938;
@@ -328,6 +348,8 @@ h2{
     background: #fff;
     color: #162938;
 }
+
+
 .password span{
     position:absolute;
     color: #fff;
@@ -337,86 +359,104 @@ h2{
 
 }
 .home .information{
+    margin-top: 34px;
     transform: translate(-400px);
     font-size: 0.9em;
     align-content:center;
-    width:100%;
+    width:90%;
 }
-.message{
-    
+.information p{
+    text-align: left;
+    margin-left: 20%;
+}
+.home .information span{
+    float: right;
+    margin-right: 10%;
+}
+
+
+/* ----------------for messages on the wall----------------------- */
+
+.container
+{    
     position:relative;
-    display: flex;
+    /* display: flex; */
     width: 98%;
     margin: 5px 0;
-
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.message p{
-    position: relative;
-    right: 0;
+.content
+{
+    position:relative;  
+    float:right;
+    margin-right: 15px;
     text-align: right;
     max-width: 65%;
     padding: 12px;
-    background: #dcf8c6;
-    border-radius: 10px;
-    background: transparent;
-    border: 1px solid white;
-    font-size: 0.9em;
-    color: white;
+    border-radius: 8px;
+    background: white;
+    font-size: 1.1em;
+    color: #162938; 
+
 }
-.message p::before{
+.content::before
+{
     content: '';
     position: absolute;
     top: 0;
     right: -12px;
     width: 20px;
-    height: 20px;
-    /* transform: translateX(10px); */
-    /* background: linear-gradient(135deg, white 0%, white 50%,transparent 50%, transparent); */
+    height: 20px; 
+    background: linear-gradient(135deg, white 0%, white 50%,transparent 50%, transparent);
 }
-.message p span{
+.writer
+{
+    position:absolute;
     display: block;
     margin-top: 5px;
     font-size: 1em;
     opacity: 2;
-    color:white;
+    color:pink;
+    transform: translate(340%, -40%);
 }
-.my_message{
+.content{
     justify-content: flex-end;  
 }
 
-.frnd_message{
+.writer{
     justify-content: flex-start;
 }
-.frnd_message p 
+/* .frnd_message p 
 {
     background: transparent;
     border: 1px solid white;
     text-align: left;
-}
-.message.frnd_message p::before{
+} */
+/* .message.frnd_message p::before{
     content: '';
     position: absolute;
     top: 0;
     left: -12px;
     width: 20px;
-    height: 20px;
+    height: 20px; */
     /* transform: translateX(-40px);
     background: linear-gradient(225deg, #fff 0%, #fff 50%,transparent 50%, transparent);
      */
-}
+/* } */
 
 .wall{
     position:absolute;
     width: 730px;
-    height: 400px;
-    transform: translate(80px, -220px);
+    height: 450px;
+    transform: translate(80px, -90%);
     background-color: transparent;
     border: 5px #fff solid;
     border-radius: 5px;
     color: #fff;
     text-align: left;
-    overflow: auto;
+    overflow:auto; 
     
 }
 
@@ -433,7 +473,7 @@ h2{
     
 }
 
-.icon{
+.icon-refresh{
     position:absolute;
     top: 0;
     right:0;
@@ -451,7 +491,46 @@ h2{
 
 
 }
-.icon:hover{
+.icon-refresh:hover{
     background-color: #fff;
     color: #162938;
 }
+
+.searhc-div{
+    width: 600px;
+    
+}
+.bottom_search{
+    position: relative;
+    /* display: inline-block; */
+    /* justify-content: left; */
+    padding: 10px;
+    background:transparent;
+    height: 30px;
+    width: px;
+    border: 2px solid white;
+    color: white;
+    border-radius: 5px;
+}
+
+.search input[type = "email"]{
+    width: 300px;
+
+}
+
+.search-button{
+    position: relative;
+    justify-content:right;
+    background: transparent;
+    border: 2px solid white;
+    border-radius: 5px;
+    height: 30px;
+    width: 60px;
+    color: white;
+    cursor: pointer;
+}
+.search-button:hover{
+    background: white;
+    color: black;
+}
+

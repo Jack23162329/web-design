@@ -27,10 +27,8 @@
         
         <div class="tab-content">
             <div id = "home"  data-tab-content class = "active">
-
+                <!-- ------------------------Home Page------------------------------- -->
                 <div class="home">
-
-                    <form action = "#" onsubmit = "showmessage(); return false;">
                     <div class="information">
                         <p>Name: <span id = "Name"></span><p>
                         <p>gender: <span id = "gender"></span><p>
@@ -38,42 +36,40 @@
                         <p>Country: <span id = "Country"></span><p>
                         <p>Email: <span id = "Email"></span><p>
                     </div>
+
+                    <form onsubmit = "uploadmessage('postOwnMessage'); return false;">
+                        <textarea id = "postOwnMessage" class = "textarea" row ="10" cols = "50" placeholder = "Write sth here😊"></textarea>
+                        <input type = "submit" class = "bottom3" id = "bottom3" value = "upload" >
+                    </form>
+                    
+                    
+                        <!-- <ion-icon name="refresh-outline"></ion-icon> -->
+        
+                    <button class="refresh-bottom" id="bottom4" onclick="refreshbottom('output-wall', 'ownWall')">Reload your Wall</button>
                     
 
-                    <div class="wall" id = "output_wall">
-                        <div class="message my_message">
-                            <p>Hi<br><span>12:15</span></p>
-                        </div>
-                        <div class="message frnd_message">
-                            <p>Hello<br><span>12:15</span></p>
-                        </div>
-                        <div class="message my_message">
-                            <p>yabi<br><span>12:15</span></p>
-                        </div>
-                        <div class="message frnd_message">
-                            <p>Hello<br><span>12:15</span></p>
-                        </div>
-                        <div class="message frnd_message">
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi expedita in ut quasi laboriosa <br><span>12:15</span></p>
-                        </div>
-                        
-                    </div>
+
+                    <div class="wall" id = "output-wall"></div>
                     
-                    <textarea id = "textarea" class = "textarea" row ="10" cols = "50" placeholder = "Write sth here😊"></textarea>
-                    <input type = "submit" class = "bottom3" id = "bottom3" value = "upload">
-                    </form>
-                    <span id = icon-4 class = "icon">
-                        <ion-icon name="refresh-outline"></ion-icon>
-                    </span>
+                    
 
                 </div>
                 
-                
+            <!-- ------------------------Browse Page------------------------------- -->
             </div>
-            <div id = "Browse" data-tab-content>
-                <!-- <h1>Browsing</h1>
-                <p>This is browse</p> -->
+            <div id = "Browse" class = "searhc-div" data-tab-content>
+                <div class="search">
+                    <p>Contact ur friends~~</p>
+                    <form onsubmit = "search_users(this);return false;">
+                        <input type = "email" class = "bottom_search" placeholder = "Your friend's email" id = "searching" required>
+                        <input type = "submit" class = "search-button" id = "bottom5" value = "search!">
+                    <form>
+                </div>
+                <div class="otherwall">
+                    
+                </div>
             </div>
+            <!-- ------------------------Account Page------------------------------- -->
             <div id = "account" data-tab-content>
                 
                 <div class="mistake" id = "mistake"></div>
@@ -131,7 +127,7 @@
                     <label for = "email">Email</label>
                         <input id = "email" type = "email" name = "email" required placeholder = "your email" >
                     <label for = "password">Password</label>
-                        <input id = "password" type = "password" name = "password" required placeholder = "your password" >
+                        <input id = "password" type = "password" name = "password" required placeholder = "your password" minLength = "7">
                         <input type = "submit"  class = "btn" value = "log in" >
                     </form>
                 </div>
