@@ -1,0 +1,322 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+}
+
+body {
+    background-color: #7a96c5;
+}
+
+.container {
+    position: absolute;
+    left: 50%;
+    width: 600px;
+    height: 400px;
+    top: 100px;
+    transform: translateX(-50%);
+}
+
+#postmsg {
+    width: 50%;
+    height: 100px;
+}
+
+.infoInput,
+input[type=email],
+select {
+    width: 90%;
+    float: right;
+}
+
+select {
+    background: linear-gradient(to bottom, #fff, #aba8a8);
+}
+
+.row {
+    margin-bottom: 5px;
+}
+
+#email_label {
+    width: auto;
+    /* border: 1px solid black; */
+    font-size: 18px;
+
+}
+
+.browse_col_name {
+    position: relative;
+    /* margin-right: 5px; */
+    float: left;
+    width: auto;
+}
+
+.browse_col_value {
+    float: left;
+    width: 400px;
+}
+
+label {
+    width: 90px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.col_name {
+    float: left;
+    width: 25%;
+}
+
+
+
+.col_value {
+    float: left;
+    width: 75%;
+}
+
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.right_bottom,
+input[type=submit] {
+    background: linear-gradient(to bottom, #fff, #aba8a8);
+    border-width: 0.5px;
+    position: relative;
+    float: right;
+    bottom: 0px;
+    right: 0px;
+    margin: 3px;
+}
+
+.top-bottom {
+    top: 10px;
+}
+
+#signout {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background: linear-gradient(to bottom, #fff, #aba8a8);
+    border: none;
+}
+
+.div_row {
+    display: flex;
+    flex-basis: auto;
+    flex-direction: column;
+    flex-shrink: 0;
+    margin: 0px;
+    min-height: 0px;
+    min-width: 0px;
+    position: relative;
+    text-decoration: none;
+
+}
+
+.msgContainer {
+    border: 0.5px solid #bfbcbc;
+    position: relative;
+    padding: 5px;
+}
+
+.font-18 {
+    font-size: 22px;
+}
+
+.writer {
+    font-size: 20px;
+    color: #ebebf0;
+
+}
+
+.sign {
+    height: 400px;
+    width: 250px;
+    float: right;
+}
+
+.signIn {
+    background-color: #fff;
+    position: relative;
+    height: 50px;
+    border: 1px solid #000000;
+    padding: 20px 0px;
+    margin-bottom: 25px;
+}
+
+.signUp {
+    background-color: #fff;
+    height: 244px;
+    border: 1px solid #000000;
+    padding: 20px 0px;
+
+}
+
+.form_title {
+    margin-top: 5px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.logo {
+    width: 340px;
+    border: 1px solid #000;
+    height: 400px;
+    float: left;
+}
+
+#searchUserArea {
+    /* border: 1px solid black; */
+    width: 515px;
+    height: auto;
+}
+
+.search-button {
+    margin-top: 10px;
+}
+
+#validAlert {
+    width: 600px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    color: #000;
+    font-size: 20px;
+    background-color: rgba(255, 51, 0, 0.5);
+}
+
+/* Basic styling for tabs */
+.tab {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px 5px 0 0;
+    background-color: #dbcfcf;
+}
+
+/* Highlight the selected tab */
+.active-tab {
+    background-color: #aba8a8;
+}
+
+/* Style for tab panels */
+.tab-panel {
+    display: none;
+    padding: 20px;
+    border: 1px solid #f3f3f3;
+    border-radius: 0 0 5px 5px;
+    position: relative;
+    width: auto;
+
+}
+
+#tabs-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
+
+/* Show the selected tab panel */
+.active-panel {
+    display: block;
+}
+
+.browse_Info {
+    display: none;
+}
+
+
+.accout_panel_content {
+    position: relative;
+    /* border: 1px solid #000; */
+    width: 50%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    /* background-color: #aba8a8; */
+
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 300px;
+    height: auto;
+}
+
+#postAlert {
+    margin: 0px 0px 10px 0px;
+    background-color: #e45252;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    padding: 3px;
+}
+
+td,
+th {
+    border: 1px solid #010101;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dbcfcf;
+}
+
+tr:nth-child(odd) {
+    background-color: #fce7e7;
+}
+
+#msgWall {
+    margin-top: 10px;
+    position: relative;
+    height: 100px;
+    /* border: 1px solid #000; */
+}
+
+.panel-title {
+    margin: 10px 0px;
+}
+
+#home-panel,
+#browse-panel {
+    position: relative;
+    margin: 10px;
+    width: 700px;
+}
+
+.home-part {
+    position: relative;
+    /* border: 1px solid #000; */
+}
+
+#mypostedArea,
+#otherpostedArea {
+    border: 3px solid #ccc;
+    border-radius: 15px;
+    min-height: 100px;
+}
+
+#postOwnMessage {
+    height: 100px;
+    width: 100%;
+}
+
+#postOtherMsg {
+    height: 100px;
+    width: 100%;
+}
+
+
