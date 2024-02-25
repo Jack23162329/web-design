@@ -54,19 +54,48 @@
                     
 
                 </div>
+            </div>   
+            <!-- ------------------------Browse Page-------------------------------  -->
+            <div id = "Browse" class = "search-div" data-tab-content>
                 
-            <!-- ------------------------Browse Page------------------------------- -->
-            </div>
-            <div id = "Browse" class = "searhc-div" data-tab-content>
-                <div class="search">
-                    <p>Contact ur friends~~</p>
-                    <form onsubmit = "search_users(this);return false;">
-                        <input type = "email" class = "bottom_search" placeholder = "Your friend's email" id = "searching" required>
-                        <input type = "submit" class = "search-button" id = "bottom5" value = "search!">
-                    <form>
-                </div>
-                <div class="otherwall">
+                <div class="search" >
+                    <div class="contact" id = "contact">
+                        <p>Contact ur friends~~</p>
+                    </div>
                     
+                    <form onsubmit = "search_users(this); return false;">
+                        <input type = "email" class = "bottom_search" 
+                        id = "searching" placeholder = "Your friend's email" required>
+
+                        <input type = "submit" class = "search-button" 
+                        id = "bottom5" value = "search!😊">
+                    </form>
+                </div>
+
+                <div class="otherwall" id = otherWall>
+                    <div id ="other_information" class = other_information>
+                        <p>Name: <span id = "Name_other"></span><p>
+                        <p>gender: <span id = "gender_other"></span><p>
+                        <p>City: <span id = "city_other"></span><p>
+                        <p>Country: <span id = "Country_other"></span><p>
+                        <p>Email: <span id = "Email_other"></span><p>
+                    </div>
+                
+                
+
+                    <form onsubmit = "uploadmessage('postothermessage'); return false;">
+                        <textarea id = "postothermessage" class = "textarea" row ="10" cols = "50" placeholder = "Write sth to ur friend~😊"></textarea>
+                        <input type = "submit" class = "button1" id = "bottom6" value = "upload" >
+                    </form>
+        
+                    <button class="refresh-button" id="bottom4" 
+                    onclick="refreshbottom('other_output-wall', 'otherWall')">Reload your Wall</button>
+                    
+
+
+                    <div class="other_wall" id = "other_output-wall">
+
+                    </div>
                 </div>
             </div>
             <!-- ------------------------Account Page------------------------------- -->
@@ -127,7 +156,7 @@
                     <label for = "email">Email</label>
                         <input id = "email" type = "email" name = "email" required placeholder = "your email" >
                     <label for = "password">Password</label>
-                        <input id = "password" type = "password" name = "password" required placeholder = "your password" minLength = "7">
+                        <input id = "password" type = "password" name = "password" required placeholder = "your password" >
                         <input type = "submit"  class = "btn" value = "log in" >
                     </form>
                 </div>

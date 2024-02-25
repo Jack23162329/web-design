@@ -3,11 +3,12 @@
 //     }
 
 
-let userInfo;
+// let userInfo;
 let toEmail = null
 
 
-window.onload = function(){
+window.onload = function()
+{
     var token = localStorage.getItem("token")
 
     if(token){
@@ -25,19 +26,22 @@ window.onload = function(){
 
 }
 //inorder to get user information easier
-function getData(token) {
+function getData(token) 
+{
     var userDataResponse = serverstub.getUserDataByToken(token)
     return userData = userDataResponse.data
 }
 
 //so that we don't have to type it everytime, make the code clear!
-function View(name){
+function View(name)
+{
     var viewcontent = document.getElementById(name)
     document.body.innerHTML = viewcontent.innerHTML
 }
 
 // inorder to change different page by using the tab system
-function attachTab(){
+function attachTab()
+{
     const tabs = document.querySelectorAll('[data-tab-target]')
         const tabContents = document.querySelectorAll('[data-tab-content]')
         
@@ -56,7 +60,8 @@ function attachTab(){
         })
         
 }
-function validation(formData){
+function validation(formData)
+{
     var password = formData.s_password.value
     var confirm_password = formData.c_password.value
     
@@ -106,7 +111,8 @@ function validation(formData){
     }
 }
 // sign-in------------------------------------------
-function signin(formData){
+function signin(formData)
+{
 
     event.preventDefault()
     var signup = document.getElementById("signup")
@@ -126,7 +132,8 @@ function signin(formData){
         signup.style.color = "red"
     }
 }
-function displaypage(){
+function displaypage()
+{
 
     View("profileview")
     displayHometab()
@@ -135,7 +142,8 @@ function displaypage(){
 }
 
 // let the page won't log out each time we refresh it~~
-function displayaccountpage(){
+function displayaccountpage()
+{
     
     var visibility = document.getElementById("icon")
     visibility.addEventListener("click", togglevisibility)
@@ -150,7 +158,8 @@ function displayaccountpage(){
     bye_bye.addEventListener("click", signout)
 }
 
-function displayHometab(){
+function displayHometab()
+{
     
     var token = localStorage.getItem("token")
     var userDataResponse = serverstub.getUserDataByToken(token)
@@ -172,11 +181,12 @@ function displayHometab(){
         Email.textContent = userData.email
 
     }else{
-        
+        return
     }
 }
 
-function signout(){
+function signout()
+{
         var token = localStorage.getItem("token")
         localStorage.removeItem("token")
         console.log(token)
@@ -190,7 +200,9 @@ function signout(){
         }        
     }
 // changing the password
-function changePassword(formData){
+function changePassword(formData)
+{
+    
     var oldPassword = formData.oldpassword.value
     var newPassword = formData.newpassword.value
     var confirm_password = formData.confirmpassword.value
@@ -201,7 +213,8 @@ function changePassword(formData){
     
     
     
-    if(newPassword != oldPassword){
+    if(newPassword != oldPassword)
+    {
         if (newPassword == confirm_password){
             const changePassword = serverstub.changePassword(token, oldPassword, newPassword)
             if(changePassword.success === true){
@@ -221,7 +234,8 @@ function changePassword(formData){
 
 }
 
-function uploadmessage(msgId) {
+function uploadmessage(msgId)
+{
     //get post message content
     let message = document.getElementById(msgId).value
     var token = localStorage.getItem("token")
@@ -239,6 +253,7 @@ function uploadmessage(msgId) {
     else {
         email = toEmail
     }
+
     let result = serverstub.postMessage(token, message, email)
     console.log(email)
     if (result.success === true) {
@@ -253,24 +268,28 @@ function uploadmessage(msgId) {
 //     refreshbottom()
 // })
 
-function refreshbottom(wallId, dare){
+function refreshbottom(wallId, dare)
+{
     var token = localStorage.getItem('token')
     getData(token)
     
-    console.log(userData)
+    
     let email 
     if(dare == 'ownWall'){
         email = userData.email
+        console.log("what")
     }
     else if(dare == 'otherWall'){
         email = toEmail;
+        console.log("aaaa")
     }
+    console.log(email,token)
     var result = serverstub.getUserMessagesByEmail(token, email)
-
+    console.log(result.success)
     if(result.success === true) {
         var postarea = document.getElementById(wallId)
         removeAllChildElement(postarea)
-
+        console.log("it work")
         var final_result = result.data
         for (i = 0; i < final_result.length; i++) {
             var container = document.createElement('div')
@@ -295,20 +314,39 @@ function refreshbottom(wallId, dare){
 
 function search_users(formData)
 {
+    event.preventDefault()
     var token = localStorage.getItem("token")
+    var seeya = document.getElementById("contact")
     var useremail = formData.searching.value;
     console.log("input", useremail)
-    user = serverstub.getUserDataByToken(token)
+    const user = serverstub.getUserDataByEmail(token, useremail)
+    console.log(user)
+    var Name = document.getElementById("Name_other")
+    var gender = document.getElementById("gender_other")
+    var city = document.getElementById("city_other")
+    var Country = document.getElementById("Country_other")
+    var Email = document.getElementById("Email_other")
     if(user.success === true)
-    {
-        toEmail = useremail
-        var browseview = document.getElementById("otherwall")
-        browseview.style.display = "block"
-        displayHometab()
+    {               
+            var userData =user.data
+            console.log(userData)
+            Name.textContent = userData.firstname +" "+ userData.familyname
+            gender.textContent = userData.gender
+            city.textContent = userData.city
+            Country.textContent = userData.country
+            Email.textContent = userData.email
+            toEmail = useremail
+            var browseview = document.getElementById("otherWall")
+            
+            browseview.style.display = "block"
+            seeya.style.display = "none"    
         
-    }
+    }  
 }
-function removeAllChildElement(pElement) {
+
+
+function removeAllChildElement(pElement) 
+{
     while (pElement.firstChild) {
         pElement.removeChild(pElement.firstChild)
     }
@@ -317,7 +355,8 @@ function removeAllChildElement(pElement) {
 
 // for the invisibility of the passwords
 
-function togglevisibility(){
+function togglevisibility()
+{
     const oldpassword = document.getElementById("oldpassword")
     if (oldpassword.type === "password"){
         oldpassword.type = "text"
@@ -325,7 +364,8 @@ function togglevisibility(){
         oldpassword.type = "password"
     }
 }
-function togglevisibility_1(){
+function togglevisibility_1()
+{
     const oldpassword = document.getElementById("newpassword")
     if (oldpassword.type === "password"){
         oldpassword.type = "text"
@@ -333,7 +373,8 @@ function togglevisibility_1(){
         oldpassword.type = "password"
     }
 }
-function togglevisibility_2(){
+function togglevisibility_2()
+{
     const oldpassword = document.getElementById("confirmpassword")
     if (oldpassword.type === "password"){
         oldpassword.type = "text"
