@@ -153,16 +153,21 @@ h2
     cursor:pointer;
     color:black;
 }
-/* 
-.tab-content h4
+.message
 {
-    color: #fff;
-    display:block;
-    transform: translate(-500px);
-} */
+    position:absolute;
+    width: 400px;
+    height: 25px;
+    justify-content: center;
+    text-align: center;
+    transform: translate(560px, 50px);
+    font-size: larger;
+    border-radius: 5px;
+
+}
 
 
-/* -------------------------------------------------------- */
+/* ---------------------------------------------for profile pages---------------------------------------------- */
 
 
 [data-tab-content]
@@ -419,7 +424,7 @@ h2
 }
 
 
-/* ----------------for messages on the wall----------------------- */
+/* ---------------------------------------------for messages on the wall------------------------------------------------ */
 
 .container
 
@@ -438,7 +443,7 @@ h2
     float:right;
     margin-right: 15px;
     text-align: right;
-    max-width: 65%;
+    max-width: 90%;
     padding: 12px;
     border-radius: 8px;
     background: white;
@@ -466,7 +471,7 @@ h2
     font-size: 1em;
     opacity: 2;
     color:pink;
-    transform: translate(300%, -40%);
+    transform: translate(0, -40%);
 }
 .content
 {
@@ -677,4 +682,10 @@ h2
 .other_information p{
     text-align: left;
     margin-left: 20%;
+}
+
+.other_information p span{
+    float:right;
+    transform: translate(-35px);
+    transform: translate();
 }

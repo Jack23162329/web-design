@@ -5,6 +5,7 @@
 
 // let userInfo;
 let toEmail = null
+let alertElement
 
 
 window.onload = function()
@@ -60,6 +61,7 @@ function attachTab()
         })
         
 }
+
 function validation(formData)
 {
     var password = formData.s_password.value
@@ -67,7 +69,6 @@ function validation(formData)
     
     console.log(password, confirm_password)
     var message = document.getElementById("message")
-    var signup = document.getElementById("signup")
 
     if(password == confirm_password){
 
@@ -94,20 +95,31 @@ function validation(formData)
         console.log(signupvalid)
         if(signupvalid.success === true){
 
-            message.textContent = " "
-            signup.textContent = signupvalid.message
-            signup.style.color = "blue"
+            message.textContent = signupvalid.message
+            message.style.backgroundColor = "white"
+            setTimeout(function () {
+                message.textContent = "";
+                message.style.backgroundColor = ""
+            }, 1500);
         }
         else{
 
-            signup.textContent = signupvalid.message
-            signup.style.color = "red"
+            message.textContent = signupvalid.message
+            message.style.backgroundColor = "red"
+            setTimeout(function () {
+                message.textContent = "";
+                message.style.backgroundColor = ""
+            }, 1500);
         }
         
     }
     else{
         message.textContent = "Password don't match"
-        message.style.backgroundColor = "#ff4d4d"
+        message.style.backgroundColor = "red"
+        setTimeout(function () {
+            message.textContent = "";
+            message.style.backgroundColor = ""
+        }, 1500);
     }
 }
 // sign-in------------------------------------------
@@ -115,7 +127,7 @@ function signin(formData)
 {
 
     event.preventDefault()
-    var signup = document.getElementById("signup")
+    var message = document.getElementById("message")
     var email = formData.email.value
     var password = formData.password.value
     var sign_in = serverstub.signIn(email, password)
@@ -128,8 +140,13 @@ function signin(formData)
 
     }
     else{
-        signup.textContent = sign_in.message
-        signup.style.color = "red"
+        message.textContent = sign_in.message
+        message.style.backgroundColor = "red"
+        setTimeout(function () {
+            message.textContent = "";
+            message.style.backgroundColor = ""
+        }, 1500);
+
     }
 }
 function displaypage()
@@ -195,10 +212,31 @@ function signout()
         if(sign_out.success === true){
             View("welcomeview")
             message.textContent = sign_out.message
+            message.style.backgroundColor = "white"
+            setTimeout(function () {
+                message.textContent = "";
+                message.style.backgroundColor = ""
+                
+            }, 1500);
+
         }else{
             View("profileview")
         }        
+}
+function alertforpassword(message)
+{
+    mistake = document.getElementById("mistake")
+    if (message){
+        mistake.textContent = message
+        setTimeout(function () {
+            mistake.textContent = "";
+        }, 1500);
     }
+    else{
+        return
+    }
+}
+
 // changing the password
 function changePassword(formData)
 {
@@ -208,7 +246,7 @@ function changePassword(formData)
     var confirm_password = formData.confirmpassword.value
 
     // inorder the show the wrong message
-    var mistake = document.getElementById("mistake")
+    // var mistake = document.getElementById("mistake")
     var token = localStorage.getItem("token")
     
     
@@ -218,16 +256,16 @@ function changePassword(formData)
         if (newPassword == confirm_password){
             const changePassword = serverstub.changePassword(token, oldPassword, newPassword)
             if(changePassword.success === true){
-                mistake.textContent = changePassword.message
+                alertforpassword(changePassword.message)
             }
             else{
-                mistake.textContent = changePassword.message
+                alertforpassword(changePassword.message)
             }
         }else{
-            mistake.textContent = "New Password don't match"
+            alertforpassword("New Password don't match")
         }
     }else{
-        mistake.textContent = "can't change to same password"
+        alertforpassword("can't change to same password")
     }
     
 
@@ -248,6 +286,7 @@ function uploadmessage(msgId)
 
     if (msgId === postOwnMessage) {
         email = userData.email
+        console.log(email)
 
     }
     else {
