@@ -1,7 +1,9 @@
 # SQLite : database handler, to save and giving informations
 import sqlite3
+import re
 # Flask : Light-weight web development framework
 from flask import g
+
 
 DATABASE_URI = "database.db"
 
@@ -49,6 +51,15 @@ def checkTokenExist(token):
         cursor.close()
         return True
     return False
+
+
+def validemail(email):
+    good_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    if re.match(good_email, email):
+        return True
+    return False
+
 
 
 

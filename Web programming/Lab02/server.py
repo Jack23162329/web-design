@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, request
-import requests
+from random import randint
 import unittest
 import logging
 import traceback
 
 
 import database_helper
-
+#inorder to get the fuction inside it
 app = Flask(__name__)
 
 
@@ -20,6 +20,7 @@ def checkUserExist(email):
 
 def persistUsers(email, password, firstname, familyname, gender, city, country,message):
     return database_helper.post_users(email, password, firstname, familyname, gender, city, country, message) 
+
 
 @app.teardown_request
 def after_request(exception):
@@ -35,35 +36,57 @@ def sign_up():
     email = data['email']
 
     # if user not exists
-    if email != "":
-        user_data = checkUserExist(email)
-        if (user_data is None):
-            password = data['password']
-            # repwd = data['repwd']
-            familyname = data['familyname']
-            firstname = data['firstname']
-            gender = data['gender']
-            city = data['city']
-            country = data['country']
-            message = '[]'
-            #check the type of the input data
-            if (password != "") and (familyname != "") and (firstname != "") and (gender != "") and (city != "") and (country != ""):    
-                if len(password) > 7 :
-                    result = persistUsers(email, password, firstname, familyname, gender, city, country, message)
-                    if result is True:
-                        return jsonify({'success': True, 'message': "Successfully created a new user.😊"}) 
+    if email != "" and email is not None:
+        if database_helper.validemail(email):
+            user_data = checkUserExist(email)
+            if (user_data is None):
+                password = data['password']
+                # repwd = data['repwd']
+                firstname = data['firstname']
+                familyname = data['familyname']
+                gender = data['gender']
+                city = data['city']
+                country = data['country']
+                message = '[]'
+                #check the type of the input data
+                if (password != "" and password is not None) and (familyname != "" and familyname is not None) and (firstname != ""and firstname is not None) and (gender != ""and gender is not None) and (city != ""and city is not None) and (country != ""and country is not None):    
+                    if len(password) > 7:
+                        result = persistUsers(email, password, firstname, familyname, gender, city, country, message)
+                        if result is True:
+                            return jsonify({'success': True, 'message': "Successfully created a new user.😊"}) ,200
+                    else:
+                        return jsonify({'success': False, 'message': "Password is at least 7 letters.😢"}) 
                 else:
-                    return jsonify({'success': False, 'message': "Password is at least 7 letters.😢"})
+                    return jsonify({'success': False, 'message': "Form data missing or incorrect type.💀"})
             else:
-                return jsonify({'success': False, 'message': "Form data missing or incorrect type.💀"})
+                return jsonify({'success': False, 'message': "User already exists.😒"}) 
         else:
-            return jsonify({'success': False, 'message': "User already exists.😒"})
+            return jsonify({'success': False, 'message': "input invalid email address🙃"})
+    else:
+        return jsonify({'success': False, 'message': "no input email detected :( "})
 
-# @app.route('/sign_up', methods =['POST'])
-# def sign_up_invalidate_data():
+# @app.route('/sign_in', methods = ['POST'])
+# def Sign_in():
+#     data = request.get_json()
+#     username = data['username']
+#     passwords = data['password']
 
+
+#     if (passwords == "" and passwords is None):
+#         return jsonify({'success': False, 'message': "Can't input emptyp passwords"})
     
-
+#     user_data = checkUserExist(username)
+#     if user_data:
+#         if user_data['password'] == passwords:
+#             letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+#             token = ''
+#             for i in range(0, 36):
+#                 token += letters[randint(0, len(letters) - 1)]
+            
+#             result =  database_helper.persisLoggedInUsers(username, token)
+#             if result is True:
+#                 return jsonify({"success": True, 'message': "User successfully singed in😘"})
+#     return jsonify({'success': False, 'message': "Wrong Username or Password"})
 
 
 @app.route('/get_user_data_by_email', methods =['POST'])
@@ -82,33 +105,7 @@ def getUserDataByEmail():
         return jsonify({'success': False, 'message': "No such user."})
     return jsonify({'success': False, 'message': "You are not signed in."})
     
-@app.route('/contact/save', methods=['POST'])
-def save_contact():
-    data = request.get_json()
-    if 'name' in data and 'number' in data:
-        if len(data['name']) < 50 and len(data['number']) < 50:
-            result = database_helper.save_contact(data['name'], data['number'])
-            if (result == True):
-                return jsonify({"msg": "Contact saved."}), 200
-            else:
-                return jsonify({"msg": "Something went wrong."}), 500
-        else:
-            return jsonify({"msg": "Not good data."}), 400
-    else:
-        return jsonify({"msg": "Not good data."}), 400
-
-
-@app.route('/contact/find/<name>', methods=['GET'])
-def find_contact(name):
-    if name is not None:
-        contacts = database_helper.get_contact(name)
-        if contacts is not None:
-            if len(contacts) == False:
-                return jsonify([]), 404
-            else:
-                return jsonify(contacts), 200
-        else:
-            return jsonify([]), 404
+# 
 
 
 if __name__ == '__main__':
