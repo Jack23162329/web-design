@@ -94,21 +94,6 @@ def sign_in():
         return jsonify({'success': False, 'message': "Wrong Username or Password"})
 
 
-@app.route('/get_user_data_by_email', methods =['POST'])
-def getUserDataByEmail():
-    data = request.get_json()
-    email = data['email']
-    token = data['token']
-    
-    # check this user logged in
-    loggedIn = database_helper.checkTokenExist(token)
-    if loggedIn:
-        # get user data
-        user_data = database_helper.getUserDataByEmail(email)
-        if user_data is not None:
-            return jsonify({'success': 1, 'message': "User data retrieved.", 'data': user_data})
-        return jsonify({'success': False, 'message': "No such user."})
-    return jsonify({'success': False, 'message': "You are not signed in."})
 @app.route('/change_password', methods = ['PUT'])
 def change_password():
     data = request.get_json()
@@ -143,13 +128,44 @@ def getUserDatabyToken():
             return jsonify({'sueecss':True, 'message': "get data successfully","data" : user_data})
     else:
         return jsonify({'success':False,'message':"invalid token ~~ pls sign_up first!"})
-
-
-
-
     
+@app.route('/get_user_data_by_email/<email>', methods =['GET'])
+def getUserDatabyemail(email): #cuz URL change with email, so we have to get the email inorder to access into correct URL
+    token = request.headers.get('Authorization')
 
+    LoggedIn = database_helper.checkTokenExist(token)
+    # check this user logged in
+    if (LoggedIn):
+       
+        result = database_helper.getUserDataByEmail(email)
+        #then we check the input email is correct or not to get the data
+        if result is not None:
+            return jsonify({'success': True, 'message': "successfully retrieved user data",'data': result})
+        return jsonify({'success': False, 'message': "email not found ~~ pls sign_up first!"})
+    return jsonify({'success':False,'message': "You are not log in ~~"})
 
+@app.route('/post_message', methods = ['POST'])
+def Post_message():
+    data = request.get_json()
+    token = request.headers.get("Authorization")
+    if token is None:
+        return jsonify({'success': False, 'message':"Token shouldn't be None"})
+    email_recipient = data['email']
+    if email_recipient is None:
+        return jsonify({'success': False, 'message':"Email shouldn't be None"})
+    message = data['message']
+    if message is None:
+        return jsonify({'success': False, 'message':"Message shouldn't be None"})
+    LoggedIn = database_helper.checkTokenExist(token)
+    
+    if LoggedIn:
+        User_data = database_helper.getUserDataByEmail(email_recipient)
+        if User_data:
+            send_message = database_helper.post_message(email_recipient, message)
+            if send_message:
+                return jsonify({'success':True, 'message': "send message successfully",'data': send_message })
+        return jsonify({'success': False, 'message': "the receiver isn't exist"})
+    return jsonify({'success': False, 'message': "You are not log in ~~"})
 
 
 
@@ -157,5 +173,4 @@ def getUserDatabyToken():
 
 
 if __name__ == '__main__':
-    
     app.run(debug=True)

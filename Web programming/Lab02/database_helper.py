@@ -24,7 +24,13 @@ def post_users(email, password, firstname, familyname, gender, city, country, me
     get_db().commit()
     return True
 
-def getUserDataByEmail(email):  
+def validemail(email):
+    good_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if re.match(good_email, email):
+        return True
+    return False
+
+def getUserDataByEmail(email):  #talbe: users
     cursor = get_db().execute('select * from users where email = ?', [email])
     rows = cursor.fetchone()
     #this method retrieves the nesxt row of a query reslt set 
@@ -44,17 +50,17 @@ def getUserDataByEmail(email):
         return result
     return None
 
+def changePassword(email, newpassword):
+    cursor = get_db().execute('UPDATE users SET password = ? WHERE email = ?', [newpassword, email])
+    get_db().commit()
+    cursor.close()
+    return True
+
 def checkTokenExist(token):
     cursor = get_db().execute('select * from loggedinusers where token = ?', [token])
     row = cursor.fetchone()
     if row is not None:
         cursor.close()
-        return True
-    return False
-
-def validemail(email):
-    good_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    if re.match(good_email, email):
         return True
     return False
 
@@ -72,11 +78,20 @@ def tokenToEmail(token):
         return email
     return None
 
-def changePassword(email, newpassword):
-    cursor = get_db().execute('UPDATE users SET password = ? WHERE email = ?', [newpassword, email])
+#table: loggedinusers
+def getUserDatabyEmail_loggedin(token):
+    cursor = get_db().execute("select * from loggedinusers where token = ?", [token])
+    rows = cursor.fetchall()[0]
+    cursor.close()
+    return {'email': rows[0], 'token': rows[1]}
+
+
+def post_message(email, message):
+    cursor = get_db().execute('UPDATE users SET email = ? where messages = ?',[email, message])
     get_db().commit()
     cursor.close()
-    return True
+    return message
+
 
 
 
