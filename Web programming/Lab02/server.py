@@ -52,6 +52,7 @@ def sign_up():
                 if (password != "" and password is not None) and (familyname != "" and familyname is not None) and (firstname != ""and firstname is not None) and (gender != ""and gender is not None) and (city != ""and city is not None) and (country != ""and country is not None):    
                     if len(password) > 7:
                         result = persistUsers(email, password, firstname, familyname, gender, city, country, message)
+                        #pose new user to database
                         if result is True:
                             return jsonify({'success': True, 'message': "Successfully created a new user.😊"}) ,200
                     else:
@@ -65,28 +66,32 @@ def sign_up():
     else:
         return jsonify({'success': False, 'message': "no input email detected :( "})
 
-# @app.route('/sign_in', methods = ['POST'])
-# def Sign_in():
-#     data = request.get_json()
-#     username = data['username']
-#     passwords = data['password']
+@app.route('/sign_in', methods = ['POST'])
+def sign_in():
+    data = request.get_json()
+    username = data['username']
+    passwords = data['password']
 
 
-#     if (passwords == "" and passwords is None):
-#         return jsonify({'success': False, 'message': "Can't input emptyp passwords"})
+    if (passwords == "" or passwords is None):
+        return jsonify({'success': False, 'message': "Can't input empty passwords"})
     
-#     user_data = checkUserExist(username)
-#     if user_data:
-#         if user_data['password'] == passwords:
-#             letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-#             token = ''
-#             for i in range(0, 36):
-#                 token += letters[randint(0, len(letters) - 1)]
+    user_data = checkUserExist(username)
+    if user_data is not None:
+        if user_data['password'] == passwords:
+            letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+            token = ''
+            for i in range(0, 36):
+                token += letters[randint(0, len(letters) - 1)]
             
-#             result =  database_helper.persisLoggedInUsers(username, token)
-#             if result is True:
-#                 return jsonify({"success": True, 'message': "User successfully singed in😘"})
-#     return jsonify({'success': False, 'message': "Wrong Username or Password"})
+            result =  database_helper.persisLoggedInUsers(username, token)
+            if result is True:
+                return jsonify({"success": True, 'message': "User successfully singed in😘", 'data': token})
+        else:
+            return jsonify({"success": False, 'message': "passwords are not match"})
+    
+    else:
+        return jsonify({'success': False, 'message': "Wrong Username or Password"})
 
 
 @app.route('/get_user_data_by_email', methods =['POST'])
@@ -104,8 +109,51 @@ def getUserDataByEmail():
             return jsonify({'success': 1, 'message': "User data retrieved.", 'data': user_data})
         return jsonify({'success': False, 'message': "No such user."})
     return jsonify({'success': False, 'message': "You are not signed in."})
+@app.route('/change_password', methods = ['PUT'])
+def change_password():
+    data = request.get_json()
+    token = request.headers.get('Authorization')
+    oldPassword = data['oldpassword']
+    newpassword = data['newpassword']
+    if(not token or not oldPassword or not newpassword):
+        return jsonify({'success': False, 'message': "Missing required fields"})
+    token_exist = database_helper.checkTokenExist(token)
+    if token_exist:
+        email = database_helper.tokenToEmail(token)
+        user_data = database_helper.getUserDataByEmail(email)
+        
+        if user_data['password'] == oldPassword:
+            database_helper.changePassword(email, newpassword )
+            return jsonify({'success': True, 'message': "Password changed."})
+        else:
+            return jsonify({'success':False, 'message': "wrong passwords."})
+    return jsonify({'success': False, 'message': "u are not log in."})
+
+
+@app.route('/get_user_data_by_token', methods = ['GET'])
+def getUserDatabyToken():
+    token = request.headers.get('Authorization')
+    if (not token):
+        return jsonify({'success': False,'message': "token doesn't exist💀"})
+    loggin = database_helper.checkTokenExist(token)
+    if(loggin):
+        email = database_helper.tokenToEmail(token)
+        if email:
+            user_data = database_helper.getUserDataByEmail(email)
+            return jsonify({'sueecss':True, 'message': "get data successfully","data" : user_data})
+    else:
+        return jsonify({'success':False,'message':"invalid token ~~ pls sign_up first!"})
+
+
+
+
     
-# 
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

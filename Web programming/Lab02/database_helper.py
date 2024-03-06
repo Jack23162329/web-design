@@ -52,14 +52,31 @@ def checkTokenExist(token):
         return True
     return False
 
-
 def validemail(email):
     good_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-
     if re.match(good_email, email):
         return True
     return False
 
+def persisLoggedInUsers(email, token):
+    print(email)
+    get_db().execute('insert into loggedinusers values (?, ?)', [email, token])
+    get_db().commit()
+    return True
+
+def tokenToEmail(token):
+    if token != "" and token is not None:
+        cursor = get_db().execute('select * from loggedinusers where token = ?', [token])
+        rows = cursor.fetchall()
+        email = rows[-1][0]
+        return email
+    return None
+
+def changePassword(email, newpassword):
+    cursor = get_db().execute('UPDATE users SET password = ? WHERE email = ?', [newpassword, email])
+    get_db().commit()
+    cursor.close()
+    return True
 
 
 
