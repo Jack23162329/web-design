@@ -2,7 +2,7 @@ drop table if exists users;
 drop table if exists loggedinusers;
 
 create table loggedinusers(
-    email text,
+    email text PRIMARY KEY,
     token text
 );
 
@@ -13,7 +13,12 @@ create table users(
     familyname text,
     gender text,
     city text,
-    country text,
-    messages text
+    country text
 );
 
+CREATE TABLE messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    token TEXT,
+    email TEXT,
+    message TEXT
+);

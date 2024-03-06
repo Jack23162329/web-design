@@ -19,8 +19,8 @@ def disconnect_db():
         g.db.close()
         g.db = None
 
-def post_users(email, password, firstname, familyname, gender, city, country, message):
-    get_db().execute('insert into users values (?, ?, ?, ?, ?, ?, ?, ?)', [email, password, familyname, firstname, gender, city, country, message])
+def post_users(email, password, firstname, familyname, gender, city, country):
+    get_db().execute('insert into users values (?, ?, ?, ?, ?, ?, ?)', [email, password, familyname, firstname, gender, city, country])
     get_db().commit()
     return True
 
@@ -45,7 +45,7 @@ def getUserDataByEmail(email):  #talbe: users
             'gender': rows[4],
             'city': rows[5],
             'country': rows[6],
-            'message': rows[7]
+            # 'messages': rows[7]
         }
         return result
     return None
@@ -86,19 +86,24 @@ def getUserDatabyEmail_loggedin(token):
     return {'email': rows[0], 'token': rows[1]}
 
 
-def post_message(email, message):
-    cursor = get_db().execute('UPDATE users SET email = ? where messages = ?',[email, message])
+def post_message(token, toemail, message):
+    cursor = get_db().execute('insert into messages (token, email, message) values (?, ?, ?)',[token, toemail, message])
     get_db().commit()
     cursor.close()
     return message
 
-
-
-
-
-
-
-
+def get_message(email):
+    cursor = get_db().execute('select * from messages where email = ?', [email])
+    rows = cursor.fetchall()
+    cursor.close()
+    result = []
+    for i in range(len(rows)):
+        result.append(rows[i][3])
+    return result
+def removeUser(token):
+    get_db().execute('delete from loggedinusers where token = ?', [token])
+    get_db().commit
+    return True
 
 
 
