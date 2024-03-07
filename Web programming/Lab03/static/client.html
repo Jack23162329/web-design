@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <link href="static/client.css" type="text/css" rel="stylesheet">
+    <script src="static/client.js"></script>
+    <script src="static/serverstub.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <title>Welcome</title>
+    
+    <script type = "text/view" id = "profileview">
+        <style>
+            body{
+                padding: 0;
+                margin: 0;
+                background-image: url("static/bgimage6.png");
+                background-position: center;
+                background-size: cover;
+            }
+        </style>
+        
+        <ul class = "tabs">
+            <li data-tab-target = "#home" class = "active tab">Home</li>
+            <li data-tab-target = "#Browse" class = "tab">Browse</li>
+            <li data-tab-target = "#account" class = "tab">Account</li>
+        </ul>
+        
+        <div class="tab-content">
+            <div id = "home"  data-tab-content class = "active">
+                <!-- ------------------------Home Page------------------------------- -->
+                <div class="home">
+                    <div class="information">
+                        <p>Name: <span id = "Name"></span><p>
+                        <p>gender: <span id = "gender"></span><p>
+                        <p>City: <span id = "city"></span><p>
+                        <p>Country: <span id = "Country"></span><p>
+                        <p>Email: <span id = "Email"></span><p>
+                    </div>
+
+                    <form onsubmit = "uploadmessage('postOwnMessage'); return false;">
+                        <textarea id = "postOwnMessage" class = "textarea" row ="10" cols = "50" placeholder = "Write sth here😊" required></textarea>
+                        <input type = "submit" class = "bottom3" id = "bottom3" value = "upload" >
+                    </form>
+                    
+                    
+                        <!-- <ion-icon name="refresh-outline"></ion-icon> -->
+        
+                    <button class="refresh-bottom" id="bottom4" onclick="refreshbottom('output-wall', 'ownWall')">Reload your Wall</button>
+                    
+
+
+                    <div class="wall" id = "output-wall"></div>
+                    
+                    
+
+                </div>
+            </div>   
+            <!-- ------------------------Browse Page-------------------------------  -->
+            <div id = "Browse" class = "search-div" data-tab-content>
+                
+                <div class="search" >
+                    <div class="contact" id = "contact">
+                        <p>Contact ur friends~~</p>
+                    </div>
+                    
+                    <form onsubmit = "search_users(this); return false;">
+                        <input type = "email" class = "bottom_search" 
+                        id = "searching" placeholder = "Your friend's email" required>
+
+                        <input type = "submit" class = "search-button" 
+                        id = "bottom5" value = "search!😊">
+                        <div class="UsernotExist" id = "UsernotExist"></div>
+                    </form>
+                </div>
+
+                <div class="otherwall" id = otherWall>
+                    <div id ="other_information" class = other_information>
+                        <p>Name: <span id = "Name_other"></span><p>
+                        <p>gender: <span id = "gender_other"></span><p>
+                        <p>City: <span id = "city_other"></span><p>
+                        <p>Country: <span id = "Country_other"></span><p>
+                        <p>Email: <span id = "Email_other"></span><p>
+                    </div>
+                
+                
+
+                    <form onsubmit = "uploadmessage('postothermessage'); return false;">
+                        <textarea id = "postothermessage" class = "textarea" row ="10" cols = "50" placeholder = "Write sth to ur friend~😊" required></textarea>
+                        <input type = "submit" class = "button1" id = "bottom6" value = "upload" >
+                    </form>
+        
+                    <button class="refresh-button" id="bottom4" 
+                    onclick="refreshbottom('other_output-wall', 'otherWall')">Reload your Wall</button>
+                    
+
+
+                    <div class="other_wall" id = "other_output-wall">
+
+                    </div>
+                </div>
+            </div>
+            <!-- ------------------------Account Page------------------------------- -->
+            <div id = "account" data-tab-content>
+                
+                <div class="mistake" id = "mistake"></div>
+                
+                    <form action = "#" onsubmit = "changePassword(this); return false;">
+                        <div class = "password">
+                            
+                            <span id = "icon">
+                                <ion-icon name="eye-outline"></ion-icon>
+                            </span>
+                            <input id = "oldpassword" type = "password" required minLength = "7">
+                            <label for = "oldpassword">Old Password</label>
+                            
+                        </div>
+                        <div class = "password">
+                            
+                            <span id = "icon-2">
+                                <ion-icon name="eye-outline"></ion-icon>
+                            </span>
+                            <input id = "newpassword" type = "password" required minLength = "7">
+                            <label for = "newpassword">New Password</label>
+                            
+                        </div>
+                        <div class="password">
+
+                            <span id = "icon-3">
+                                <ion-icon name="eye-outline"></ion-icon>
+                            </span>
+                            <input id = "confirmpassword" type = "password" required minLength = "7">
+                            <label for = "confirmpassword">Enter Again</label>
+                        
+                        </div>
+                        <input type = "submit" class = "bottom"  value = "Confirm Passwords">
+                        
+                    </form>
+                    
+                    <input id = "signout" type = "submit" class = "bottom2" value = "Sign out">
+
+                </div>
+            </div>
+        </div> 
+        
+    </script>    
+    <script id = "welcomeview" type = "text/view">
+    
+        <div class = "message" id = "message"></div>
+        <div class = "wrapper" >
+            <div class = "input-box-logo">
+                <img src = "static/wimage.png" width = "340" height = "400" alt = "It's a logo!">
+            </div>
+            <div class = "input-box">
+                <div class = "input-box-login">
+                    <form action = "#" onsubmit = "signin(this);return false;">
+                    <label for = "email">Email</label>
+                        <input id = "email" type = "email" name = "email" required placeholder = "your email" >
+                    <label for = "password">Password</label>
+                        <input id = "password" type = "password" name = "password" required placeholder = "your password" minLength = "7">
+                        <input type = "submit"  class = "btn" value = "log in" >
+                    </form>
+                </div>
+    
+                <div class = "input-box-signup">
+                    <form action = "#" onsubmit="signupvalidation(this);return false;">
+                    <h3 class = "sign">Sign up here</h3>
+                    <label for ="name">First name</label>
+                        <input id = "name" type = "text" name = "Name" required>
+                    <label for = "F_name">Family name </label>
+                        <input id = "F_name" type = "text" name = "Name" required >
+                    <label>Gender</label>
+                    <select id = "gender">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                    
+                    <label for = "city">City</label>
+                        <input id = "city" type = "text" name = "city" required>
+                    <label for = "Country">Country</label>
+                        <input id =  "Country" type = "text" name = "Country" required>
+                    <label for = "s_email">Email</label>
+                        <input id = "s_email" type = "email" name = "email" required>
+                    <label for = "s_password">password</label>
+                        <input id = "s_password" type = "password" name = "password" required minLength = "7">
+                    <label for = "c_password">Repeat PSW</label>
+                        <input id = "c_password" type = "password" name = "confirm_password" required minLength = "7">
+                        <input type = "submit" class = "btn" value = "sign up" >
+                    </form>
+                </div>
+                
+            </div> 
+        </div>
+    </script>
+
+<body>
+    
+</body>
+</html>
