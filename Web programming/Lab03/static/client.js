@@ -1,8 +1,12 @@
-displayView = function(view){
-    document.getElementById("view").innerHTML = document.getElementById(view).innerHTML;
+// displayView = function(view){
+//     document.getElementById("view").innerHTML = document.getElementById(view).innerHTML;
+//   }
+
+  function View(name)
+  {
+      var viewcontent = document.getElementById(name)
+      document.body.innerHTML = viewcontent.innerHTML
   }
-
-
 // let userInfo;
 let toEmail = null
 let alertElement
@@ -11,7 +15,7 @@ let alertElement
 window.onload = function()
 {
     var token = localStorage.getItem("token")
-
+    console.log(token)
     if(token){
         View("profileview")
         displaypage()
@@ -23,14 +27,28 @@ window.onload = function()
 //inorder to get user information easier
 function getData(token) 
 {
-    var userDataResponse = serverstub.getUserDataByToken(token)
-    return userData = userDataResponse.data
+    // var userDataResponse = serverstub.getUserDataByToken(token)
+    // return userData = userDataResponse.data
+    
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            if (resp.success){
+                console.log(resp.message)
+            }
+            else{
+                console.log("didn't get any data stupid")
+            }
+        }
+    }
+    xml.open("GET","get_user_data_by_token", true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader('Authorization', token);
+    xml.send();
+    
 }
-function View(name)
-{
-    var viewcontent = document.getElementById(name)
-    document.body.innerHTML = viewcontent.innerHTML
-}
+
 
 //so that we don't have to type it everytime, make the code clear!
 
@@ -80,6 +98,7 @@ function signupvalidation(formData)
         var country = formData.Country.value
     }
     else{
+        var email = ""
         message.textContent = "Repeated password doesn't fit with the original"
     }
     var xml = new XMLHttpRequest();
@@ -100,32 +119,21 @@ function signin(formData)
 {
 
     event.preventDefault()
-    var message = document.getElementById("message")
+    // var message = document.getElementById("message")
     var email = formData.email.value
     var password = formData.password.value
-    // var sign_in = serverstub.signIn(email, password)
 
-    // if(sign_in.success === true){
-
-    //     // console.log(sign_in.data, sign_in.message)
-    //     localStorage.setItem("token", sign_in.data)
-    //     displaypage()
-
-    // }
-    // else{
-    //     message.textContent = sign_in.message
-    //     message.style.backgroundColor = "red"
-    //     setTimeout(function () {
-    //         message.textContent = "";
-    //         message.style.backgroundColor = ""
-    //     }, 1500);
-
-    // }
     var xml = new XMLHttpRequest();
     xml.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             var resp = JSON.parse(xml.responseText);
             console.log(resp);
+            if (resp.success){
+                var newToken = {'email': email, 'token': resp.data}
+                localStorage.setItem("token",JSON.stringify(newToken))
+                displaypage()
+            }
+                
         }
 
     }
@@ -138,7 +146,7 @@ function signin(formData)
 function displaypage()
 {
     View("profileview")
-    displayHometab()
+    // displayHometab()
     displayaccountpage()
     attachTab()
 }
@@ -163,8 +171,10 @@ function displayaccountpage()
 function displayHometab()
 {
     
-    var token = localStorage.getItem("token")
-    var userDataResponse = serverstub.getUserDataByToken(token)
+    var token = JSON.parse(localStorage.getItem("token")).token;
+    console.log(token)
+    var userDataResponse = getData(token)
+
     
     var Name = document.getElementById("Name")
     var gender = document.getElementById("gender")
@@ -172,7 +182,7 @@ function displayHometab()
     var Country = document.getElementById("Country")
     var Email = document.getElementById("Email")
 
-    if (userDataResponse.success === true){
+    if (userDataResponse.success){
         
         var userData = userDataResponse.data
 
@@ -189,24 +199,33 @@ function displayHometab()
 
 function signout()
 {
-        var token = localStorage.getItem("token")
-        localStorage.removeItem("token")
-        // console.log(token)
-        var sign_out = serverstub.signOut(token)
+        var token = JSON.parse(localStorage.getItem("token")).token;
+        var email = JSON.parse(localStorage.getItem("token")).email;
 
-        if(sign_out.success === true){
-            View("welcomeview")
-            message.textContent = sign_out.message
-            message.style.backgroundColor = "white"
-            setTimeout(function () {
-                message.textContent = "";
-                message.style.backgroundColor = ""
-                
-            }, 1500);
+        
+        console.log(token, email)
+        // var sign_out = serverstub.signOut(token)
+        var xml = new XMLHttpRequest();
+        xml.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+                var resp = JSON.parse(xml.responseText)
+                if (resp.success){
+                    console.log(resp.message)
 
-        }else{
-            View("profileview")
-        }        
+                    localStorage.removeItem("token");
+                    View("welcomeview")
+                }else{
+                    console.log(resp.message)
+                    console.log('not log out successufully')
+                }
+            }        
+        }
+
+        xml.open("DELETE", "sign_out", true);
+        xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xml.setRequestHeader('Authorization', token);
+        xml.send();
+        
 }
 function alertforpassword(message)
 {
