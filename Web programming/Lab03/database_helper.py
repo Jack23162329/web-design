@@ -45,7 +45,7 @@ def Get_email_from_users(email):  #talbe: users
             'email': rows[0],
             'password': rows[1],
             'familyname': rows[2],
-            'fitstname': rows[3],
+            'firstname': rows[3],
             'gender': rows[4],
             'city': rows[5],
             'country': rows[6],

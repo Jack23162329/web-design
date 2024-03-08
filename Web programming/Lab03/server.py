@@ -79,10 +79,10 @@ def sign_in():
             if result is True:
                 return jsonify({"success": True, 'message': "User successfully singed in😘", 'data': token})
         else:
-            return jsonify({"success": False, 'message': "passwords are not match"})
+            return jsonify({"success": False, 'message': "Wrong Username or Password"})
     
     else:
-        return jsonify({'success': False, 'message': "Wrong Username or Password"})
+        return jsonify({'success': False, 'message': "No such User"})
 
 
 @app.route('/change_password', methods = ['PUT'])
@@ -91,6 +91,7 @@ def change_password():
     token = request.headers.get('Authorization')
     oldPassword = data['oldpassword']
     newpassword = data['newpassword']
+    confirmpassword = data['confirm_password']
     if(not token or not oldPassword or not newpassword):
         return jsonify({'success': False, 'message': "Missing required fields"})
     token_exist = database_helper.Get_token_from_loggedinusers(token)
@@ -99,8 +100,14 @@ def change_password():
         user_data = database_helper.Get_email_from_users(email)
         
         if user_data['password'] == oldPassword:
-            database_helper.Update_password_from_users(email, newpassword )
-            return jsonify({'success': True, 'message': "Password changed."})
+            if newpassword == confirmpassword:
+                if newpassword != oldPassword:
+                    database_helper.Update_password_from_users(email, newpassword )
+                    return jsonify({'success': True, 'message': "Password changed."})
+                else:
+                    return jsonify({'success': False,'message': "can't change to same password"})
+            else:
+                return jsonify({'success':False,'message': "confirm passwords don't match"})
         else:
             return jsonify({'success':False, 'message': "wrong passwords."})
     return jsonify({'success': False, 'message': "u are not log in."})
@@ -116,7 +123,7 @@ def getUserDatabyToken():
         email = database_helper.get_email_from_loggedinusers(token)
         if email:
             user_data = database_helper.Get_email_from_users(email)
-            return jsonify({'sueecss':True, 'message': "get data successfully","data" : user_data})
+            return jsonify({'success':True, 'message': "get data successfully","data" : user_data})
     else:
         return jsonify({'success':False,'message':"invalid token ~~ pls sign_up first!"})
     
@@ -201,13 +208,12 @@ def Sign_out():
         return jsonify({'success': False, 'message': "Empty  token"})
     
     LoggedIn = database_helper.Get_token_from_loggedinusers(token)
-    print(token)
     if LoggedIn:
         email = database_helper.get_email_from_loggedinusers(token)
         exist_user = database_helper.Get_email_from_users(email)
         if exist_user:
             database_helper.delete_user_from_loggedinusers(email);
-            return jsonify({'success': True, 'message': "Successfully remove User!!"})
+            return jsonify({'success': True, 'message': "Sign out successfully😊"})
         else:
             return jsonify({'success': False,'message': "User doesn't exist"})
     return jsonify({'success': False,'message':"You are not log in ~~"})
