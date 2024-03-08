@@ -15,7 +15,7 @@ create table users(
 
 CREATE TABLE messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    token TEXT,
-    email TEXT,
+    fromEmail TEXT,
+    toEmail TEXT,
     message TEXT
 );

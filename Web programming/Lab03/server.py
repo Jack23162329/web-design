@@ -30,7 +30,7 @@ def sign_up():
     # if user not exists
     if email != "" and email is not None:
         if database_helper.validemail(email):
-            user_data = database_helper.Get_email_from_users(email)
+            user_data = database_helper.Get_user_from_users(email)
             if (user_data is None):
                 password = data['password']
                 firstname = data['firstname']
@@ -43,7 +43,7 @@ def sign_up():
                     if len(password) >= 7:
                         result = database_helper.Insert_user_into_users(email, password, firstname, familyname, gender, city, country) 
                         #pose new user to database
-                        # user = database_helper.Get_email_from_users(email)
+                        # user = database_helper.Get_user_from_users(email)
                         if result is True:
                             return jsonify({'success': True, 'message': "Successfully created a new user.😊"}) ,200
                     else:
@@ -67,7 +67,7 @@ def sign_in():
     # if (passwords == "" or passwords is None):
     #     return jsonify({'success': False, 'message': "Can't input empty passwords"})
     
-    user_data = database_helper.Get_email_from_users(username)
+    user_data = database_helper.Get_user_from_users(username)
     if user_data is not None:
         if user_data['password'] == passwords:
             letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
@@ -97,7 +97,7 @@ def change_password():
     token_exist = database_helper.Get_token_from_loggedinusers(token)
     if token_exist:
         email = database_helper.get_email_from_loggedinusers(token)
-        user_data = database_helper.Get_email_from_users(email)
+        user_data = database_helper.Get_user_from_users(email)
         
         if user_data['password'] == oldPassword:
             if newpassword == confirmpassword:
@@ -122,7 +122,7 @@ def getUserDatabyToken():
     if(loggin):
         email = database_helper.get_email_from_loggedinusers(token)
         if email:
-            user_data = database_helper.Get_email_from_users(email)
+            user_data = database_helper.Get_user_from_users(email)
             return jsonify({'success':True, 'message': "get data successfully","data" : user_data})
     else:
         return jsonify({'success':False,'message':"invalid token ~~ pls sign_up first!"})
@@ -135,11 +135,11 @@ def getUserDatabyemail(email): #cuz URL change with email, so we have to get the
     # check this user logged in
     if (LoggedIn):
        
-        result = database_helper.Get_email_from_users(email)
+        result = database_helper.Get_user_from_users(email)
         #then we check the input email is correct or not to get the data
         if result is not None:
             return jsonify({'success': True, 'message': "successfully retrieved user data",'data': result})
-        return jsonify({'success': False, 'message': "email not found ~~ pls sign_up first!"})
+        return jsonify({'success': False, 'message': "User doesn't exist😢"})
     return jsonify({'success':False,'message': "You are not log in ~~"})
 
 @app.route('/post_message', methods = ['POST'])
@@ -148,22 +148,27 @@ def Post_message():
     token = request.headers.get("Authorization")
     if token is None:
         return jsonify({'success': False, 'message':"incorrect token"})
-    email_recipient = data['email']
-    if email_recipient is None:
+    toEmail = data['email']
+    if toEmail is None:
         return jsonify({'success': False, 'message':"Empty not found"})
     message = data['message']
     if message is None:
         return jsonify({'success': False, 'message':"Empty messages"})
+    
+    fromEmail = database_helper.get_email_from_loggedinusers(token)
+    print(fromEmail,toEmail);
+    
     LoggedIn = database_helper.Get_token_from_loggedinusers(token)
 
     
     if LoggedIn:
-        User_data = database_helper.Get_email_from_users(email_recipient)
+        if (toEmail == None):
+            toEmail = fromEmail;
+        User_data = database_helper.Get_user_from_users(toEmail)
         if User_data:
-            send_message = database_helper.Insert_Data_into_messages(token, email_recipient, message)
-            
+            send_message = database_helper.Insert_Data_into_messages(fromEmail, toEmail, message)
             if send_message:
-                # messages = database_helper.get_message(email_recipient)
+                # messages = database_helper.get_message(toEmail)
                 return jsonify({'success':True, 'message': "send message successfully",'messages': send_message})
         return jsonify({'success': False, 'message': "the receiver isn't exist"})
     return jsonify({'success': False, 'message': "You are not log in ~~"})
@@ -177,7 +182,7 @@ def getusermessagesbytoken():
 
     if LoggedIn:
         email = database_helper.get_email_from_loggedinusers(token)
-        User_data = database_helper.get_email_from_messages(email)
+        User_data = database_helper.get_message_from_email(email)
         return jsonify({'success': True, 'message':'Successfully retrieved user messages !', 'messages': User_data})
     else:
         return jsonify({'success': False, 'message': "You are not log in ~~"})
@@ -185,15 +190,11 @@ def getusermessagesbytoken():
 @app.route('/get_user_messages_by_email/<email>', methods = ['GET'])
 def getusermessagebyemail(email):
     token = request.headers.get("Authorization")
-    if token is None:
-        return jsonify({'success': False, 'message': "token can't be None"})
-    if email is None:
-        return jsonify({'success': False, 'message': "Email can't be None"})
     LoggedIn = database_helper.Get_token_from_loggedinusers(token)
     if LoggedIn:
-        exist_user = database_helper.Get_email_from_users(email)
+        exist_user = database_helper.Get_user_from_users(email)
         if exist_user:
-            User_message = database_helper.get_email_from_messages(email)
+            User_message = database_helper.get_message_from_email(email)
             return jsonify({'success': True, 'message': "successfully retrieved user messages !", 'messages': User_message})
         else:
             return jsonify({'success': False,'message': "User doesn't exist"})
@@ -210,7 +211,7 @@ def Sign_out():
     LoggedIn = database_helper.Get_token_from_loggedinusers(token)
     if LoggedIn:
         email = database_helper.get_email_from_loggedinusers(token)
-        exist_user = database_helper.Get_email_from_users(email)
+        exist_user = database_helper.Get_user_from_users(email)
         if exist_user:
             database_helper.delete_user_from_loggedinusers(email);
             return jsonify({'success': True, 'message': "Sign out successfully😊"})

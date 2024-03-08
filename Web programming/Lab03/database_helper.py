@@ -33,7 +33,7 @@ def validemail(email):
     return False
 
 #get user data by email
-def Get_email_from_users(email):  #talbe: users
+def Get_user_from_users(email):  #talbe: users
     # print(email)
     cursor = get_db().execute('select * from users where email = ?', [email])
     rows = cursor.fetchone()
@@ -49,7 +49,6 @@ def Get_email_from_users(email):  #talbe: users
             'gender': rows[4],
             'city': rows[5],
             'country': rows[6],
-            # 'messages': rows[7]
         }
         return result
     return None
@@ -86,20 +85,21 @@ def get_email_from_loggedinusers(token):
     return None
 
 #sendmessages
-def Insert_Data_into_messages(token, toemail, message):
-    get_db().execute('insert into messages (token, email, message) values (?, ?, ?)',[token, toemail, message])
+def Insert_Data_into_messages(fromEmail, toEmail, message):
+    get_db().execute('insert into messages (fromEmail, toEmail, message) values (?, ?, ?)',[fromEmail, toEmail, message])
     get_db().commit()
     return message
 
-#get messages via email
-def get_email_from_messages(email):
-    cursor = get_db().execute('select * from messages where email = ?', [email])
+def get_message_from_email(toEmail):
+    cursor = get_db().execute("SELECT * FROM messages where toEmail = ?", [toEmail])
     rows = cursor.fetchall()
     cursor.close()
     result = []
     for i in range(len(rows)):
-        result.append(rows[i][3])
+        result.append({'email': rows[i][1], 'message': rows[i][3]})
+        
     return result
+
 #removeUsers
 def delete_user_from_loggedinusers(email):
     get_db().execute('DELETE FROM loggedinusers where email = ?', [email])
@@ -110,7 +110,16 @@ def delete_user_from_loggedinusers(email):
 
 
 
+# get messages via email
+# def get_message_from_messages(email):
+#     cursor = get_db().execute('select * from messages where email = ?', [email])
+#     rows = cursor.fetchall()
+#     cursor.close()
+#     result = []
+#     for i in range(len(rows)):
+#         result.append(rows[i][3])
 
+#     return result
 
 
 
