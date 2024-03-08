@@ -34,7 +34,7 @@ def validemail(email):
 
 #get user data by email
 def Get_email_from_users(email):  #talbe: users
-    print(email)
+    # print(email)
     cursor = get_db().execute('select * from users where email = ?', [email])
     rows = cursor.fetchone()
     #this method retrieves the nesxt row of a query reslt set 
@@ -71,13 +71,13 @@ def Get_token_from_loggedinusers(token):
 
 #Signin
 def Insert_Data_into_loggedinusers(email, token):
-    print(email, token)
+    # print(email, token)
     get_db().execute('insert into loggedinusers values (?, ?)', [email, token])
     get_db().commit()
     return True
 
 #get token and get the email
-def get_token_from_loggedinusers(token):
+def get_email_from_loggedinusers(token):
     if token != "" and token is not None:
         cursor = get_db().execute('select * from loggedinusers where token = ?', [token])
         rows = cursor.fetchall()
@@ -101,9 +101,9 @@ def get_email_from_messages(email):
         result.append(rows[i][3])
     return result
 #removeUsers
-def delete__token_from_loggedinusers(token):
-    get_db().execute('delete from loggedinusers where token = ?', [token])
-    get_db().commit
+def delete_user_from_loggedinusers(email):
+    get_db().execute('DELETE FROM loggedinusers where email = ?', [email])
+    get_db().commit()
     return True
 
 

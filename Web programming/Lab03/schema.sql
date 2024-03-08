@@ -1,7 +1,3 @@
-drop table if exists users;
-drop table if exists loggedinusers;
-drop table if exists messages;
-
 create table loggedinusers(
     email text PRIMARY KEY,
     token text
