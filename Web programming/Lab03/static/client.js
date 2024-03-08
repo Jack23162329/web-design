@@ -16,6 +16,7 @@ window.onload = function()
 {
     var token = localStorage.getItem("token")
     console.log(token)
+    // localStorage.removeItem("token");
     if(token){
         View("profileview")
         displaypage()
@@ -25,60 +26,34 @@ window.onload = function()
     }
 }
 //inorder to get user information easier
-function getData(token) 
-{
-    // var userDataResponse = serverstub.getUserDataByToken(token)
-    // return userData = userDataResponse.data
-    
-    var xml = new XMLHttpRequest();
-    xml.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            var resp = JSON.parse(xml.responseText);
-            if (resp.success){
-                console.log(resp.message)
-            }
-            else{
-                console.log("didn't get any data stupid")
-            }
-        }
-    }
-    xml.open("GET","get_user_data_by_token", true);
-    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
-    xml.setRequestHeader('Authorization', token);
-    xml.send();
-    
-}
+// function getData(token) 
+// {
+//     // var userDataResponse = serverstub.getUserDataByToken(token)
+//     // return userData = userDataResponse.data
 
+//     var xml = new XMLHttpRequest();
+//     xml.onreadystatechange = function(){
+//         if(this.readyState == 4 && this.status == 200){
+//             var resp = JSON.parse(xml.responseText);
+//             if (resp.success){
+//                 console.log(resp.message)
+//                 var User_data = {'email': resp.data.email, 'password': resp.data.password, 'firstname': resp.data.firstname, 
+//                 'familyname': resp.data.familyname, 'gender': resp.data.gender, 'city': resp.data.city, 'country':resp.data.country}
+//                 localStorage.setItem("UserData",JSON.stringify(User_data))
 
+//             }
+//             else{
+//                 console.log(resp.message)
+//             }
+//         }
+//     }
+//     xml.open("GET","get_user_data_by_token", true);
+//     xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+//     xml.setRequestHeader('Authorization', token);
+//     xml.send();
+    
+// }
 //so that we don't have to type it everytime, make the code clear!
-
-// inorder to change different page by using the tab system
-function attachTab()
-{
-    const tabs = document.querySelectorAll('[data-tab-target]')
-        const tabContents = document.querySelectorAll('[data-tab-content]')
-        
-        tabs.forEach(tab => {
-            tab.addEventListener('click', ()=>{
-
-                const target = document.querySelector(tab.dataset.tabTarget)
-
-                tabContents.forEach(tabContent => {
-                    tabContent.classList.remove('active')
-                    // remove everything first
-                 })
-
-                tabs.forEach(tab => {
-                    tab.classList.remove('active')
-                 })
-                tab.classList.add('active')
-                // make the color stay after we click that tab
-                target.classList.add('active')
-                // only activate the one we click
-            })
-        })
-        
-}
 
 function signupvalidation(formData)
 {
@@ -106,7 +81,22 @@ function signupvalidation(formData)
         // 4 : request finished and response is ready, 200: 'OK'
         if(this.readyState == 4 && this.status == 200){ 
             var resp = JSON.parse(xml.responseText);
-            console.log(resp);
+            if (resp.success){
+                message.textContent = resp.message;
+                message.style.backgroundColor = "white"
+                setTimeout(function () {
+                    message.textContent = "";
+                    message.style.backgroundColor = ""
+                }, 1500);
+            }else{
+                message.textContent = resp.message;
+                message.style.backgroundColor = "red"
+                setTimeout(function () {
+                    message.textContent = "";
+                    message.style.backgroundColor = ""
+                }, 1500);
+            }
+            
         }
     }
 
@@ -119,7 +109,7 @@ function signin(formData)
 {
 
     event.preventDefault()
-    // var message = document.getElementById("message")
+    var message = document.getElementById("message")
     var email = formData.email.value
     var password = formData.password.value
 
@@ -127,11 +117,18 @@ function signin(formData)
     xml.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             var resp = JSON.parse(xml.responseText);
-            console.log(resp);
             if (resp.success){
+                console.log(resp.message)
                 var newToken = {'email': email, 'token': resp.data}
                 localStorage.setItem("token",JSON.stringify(newToken))
                 displaypage()
+            }else{
+                message.textContent = resp.message;
+                message.style.backgroundColor = "red"
+                setTimeout(function () {
+                    message.textContent = "";
+                    message.style.backgroundColor = ""
+                }, 1500);
             }
                 
         }
@@ -146,55 +143,47 @@ function signin(formData)
 function displaypage()
 {
     View("profileview")
-    // displayHometab()
+    displayHometab()
     displayaccountpage()
     attachTab()
 }
 
 // let the page won't log out each time we refresh it~~
-function displayaccountpage()
-{
-    
-    var visibility = document.getElementById("icon")
-    visibility.addEventListener("click", togglevisibility)
-    
-    var visibility_1 = document.getElementById("icon-2")
-    visibility_1.addEventListener("click", togglevisibility_1)
-    
-    var visibility_2 = document.getElementById("icon-3")
-    visibility_2.addEventListener("click", togglevisibility_2)
-    
-    var bye_bye = document.getElementById("signout")
-    bye_bye.addEventListener("click", signout)
-}
-
 function displayHometab()
 {
     
     var token = JSON.parse(localStorage.getItem("token")).token;
-    console.log(token)
-    var userDataResponse = getData(token)
-
     
-    var Name = document.getElementById("Name")
-    var gender = document.getElementById("gender")
-    var city = document.getElementById("city")
-    var Country = document.getElementById("Country")
-    var Email = document.getElementById("Email")
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            if (resp.success){
+                console.log(resp.message)
+                var Name = document.getElementById("Name")
+                var gender = document.getElementById("gender")
+                var city = document.getElementById("city")
+                var Country = document.getElementById("Country")
+                var Email = document.getElementById("Email")
 
-    if (userDataResponse.success){
-        
-        var userData = userDataResponse.data
-
-        Name.textContent = userData.firstname +" "+ userData.familyname
-        gender.textContent = userData.gender
-        city.textContent = userData.city
-        Country.textContent = userData.country
-        Email.textContent = userData.email
-
-    }else{
-        return
+                Name.textContent = resp.data.firstname +" "+ resp.data.familyname
+                gender.textContent = resp.data.gender
+                city.textContent = resp.data.city
+                Country.textContent = resp.data.country
+                Email.textContent = resp.data.email
+    
+            }
+            else{
+                console.log(resp.message)
+            }
+        }
     }
+
+    xml.open("GET","get_user_data_by_token", true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader('Authorization', token);
+    xml.send();
+    
 }
 
 function signout()
@@ -214,6 +203,13 @@ function signout()
 
                     localStorage.removeItem("token");
                     View("welcomeview")
+                    message.textContent = resp.message
+                    message.style.backgroundColor = "white"
+                    setTimeout(function () {
+                        message.textContent = "";
+                        message.style.backgroundColor = ""
+                        
+                    }, 1500);
                 }else{
                     console.log(resp.message)
                     console.log('not log out successufully')
@@ -251,26 +247,29 @@ function changePassword(formData)
 
     // inorder the show the wrong message
     // var mistake = document.getElementById("mistake")
-    var token = localStorage.getItem("token")
+    var token = JSON.parse(localStorage.getItem("token")).token
     
     
-    
-    if(newPassword != oldPassword)
-    {
-        if (newPassword == confirm_password){
-            const changePassword = serverstub.changePassword(token, oldPassword, newPassword)
-            if(changePassword.success === true){
-                alertforpassword(changePassword.message)
+    // const changePassword = serverstub.changePassword(token, oldPassword, newPassword)
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            if(resp.success){
+                alertforpassword(resp.message)
             }
             else{
-                alertforpassword(changePassword.message)
+                alertforpassword(resp.message)
             }
-        }else{
-            alertforpassword("New Password don't match")
         }
-    }else{
-        alertforpassword("can't change to same password")
     }
+
+
+    xml.open('PUT',"change_password" ,true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader("Authorization", token);
+    xml.send(JSON.stringify({'oldpassword':oldPassword, 'newpassword':newPassword, 'confirm_password':confirm_password}))
+    // PUT just like PUSH, send function should send a "string" back~
     
 
 
@@ -438,5 +437,47 @@ function togglevisibility_2()
     }else{
         oldpassword.type = "password"
     }
+}
+// inorder to change different page by using the tab system
+function attachTab()
+{
+    const tabs = document.querySelectorAll('[data-tab-target]')
+        const tabContents = document.querySelectorAll('[data-tab-content]')
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', ()=>{
+
+                const target = document.querySelector(tab.dataset.tabTarget)
+
+                tabContents.forEach(tabContent => {
+                    tabContent.classList.remove('active')
+                    // remove everything first
+                 })
+
+                tabs.forEach(tab => {
+                    tab.classList.remove('active')
+                 })
+                tab.classList.add('active')
+                // make the color stay after we click that tab
+                target.classList.add('active')
+                // only activate the one we click
+            })
+        })
+        
+}
+function displayaccountpage()
+{
+    
+    var visibility = document.getElementById("icon")
+    visibility.addEventListener("click", togglevisibility)
+    
+    var visibility_1 = document.getElementById("icon-2")
+    visibility_1.addEventListener("click", togglevisibility_1)
+    
+    var visibility_2 = document.getElementById("icon-3")
+    visibility_2.addEventListener("click", togglevisibility_2)
+    
+    var bye_bye = document.getElementById("signout")
+    bye_bye.addEventListener("click", signout)
 }
 
