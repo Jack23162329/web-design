@@ -25,35 +25,7 @@ window.onload = function()
         View("welcomeview")
     }
 }
-//inorder to get user information easier
-// function getData(token) 
-// {
-//     // var userDataResponse = serverstub.getUserDataByToken(token)
-//     // return userData = userDataResponse.data
 
-//     var xml = new XMLHttpRequest();
-//     xml.onreadystatechange = function(){
-//         if(this.readyState == 4 && this.status == 200){
-//             var resp = JSON.parse(xml.responseText);
-//             if (resp.success){
-//                 console.log(resp.message)
-//                 var User_data = {'email': resp.data.email, 'password': resp.data.password, 'firstname': resp.data.firstname, 
-//                 'familyname': resp.data.familyname, 'gender': resp.data.gender, 'city': resp.data.city, 'country':resp.data.country}
-//                 localStorage.setItem("UserData",JSON.stringify(User_data))
-
-//             }
-//             else{
-//                 console.log(resp.message)
-//             }
-//         }
-//     }
-//     xml.open("GET","get_user_data_by_token", true);
-//     xml.setRequestHeader('Content-type','application/json; charset=utf-8');
-//     xml.setRequestHeader('Authorization', token);
-//     xml.send();
-    
-// }
-//so that we don't have to type it everytime, make the code clear!
 
 function signupvalidation(formData)
 {
@@ -279,125 +251,146 @@ function uploadmessage(messageId)
 {
     //get post message content
     let message = document.getElementById(messageId).value
-    var token = localStorage.getItem("token")
-    getData(token)
-    // to get userData
     
-    if (message == "") {
-        return
-        // avoid blank message
+    var token = JSON.parse(localStorage.getItem("token")).token
+    var User_email = JSON.parse(localStorage.getItem("token")).email
+    console.log(User_email, messageId)
+    let email;
+    // === call strict equality operator, even the type needs to be the same!!
+    // ex. 1 === 1 (true)
+    // ex. '1' === 1 (false)
+    // and it's the reason why postOwnMessage need to be string
+    if(messageId === 'postOwnMessage'){
+        email = User_email
     }
-    let email
-
-    if (messageId === postOwnMessage) {
-        email = userData.email
-        // console.log(email)
-    }
-    else {
+    else{
         email = toEmail
     }
-
-    let result = serverstub.postMessage(token, message, email)
-    // console.log(email)
-    if (result.success === true) {
-        // console.log(result.message)
-        document.getElementById(messageId).value = ""
-        // after posting it, set the value to none to let the user know 
-        // that submit already done
+    console.log(token, email, message)
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            if(resp.success){
+                console.log(resp.message)
+            }else{
+                console.log(resp.message)
+            }
+        }
     }
+    xml.open("POST","post_message", true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader('Authorization', token);
+    xml.send(JSON.stringify({'message': message, 'email': email}));
 }
 
 function refreshbottom(wallId, dare)
 {
-    var token = localStorage.getItem('token')
-    getData(token)
+    
+    var token = JSON.parse(localStorage.getItem("token")).token
+    var User_email = JSON.parse(localStorage.getItem("token")).email
     
     
-    let email 
+    let email ;
     if(dare == 'ownWall'){
-        email = userData.email
-        // console.log("what")
+        email = User_email
     }
     else if(dare == 'otherWall'){
         email = toEmail;
-        // console.log("aaaa")
     }
-    // console.log(email,token)
-    var result = serverstub.getUserMessagesByEmail(token, email)
-    // console.log(result.success)
-    if(result.success === true) {
-        var postarea = document.getElementById(wallId)
-        // get the wall that u wanna send the message to
-        removeAllChildElement(postarea)
-        // remove everything from postarea
-        var final_result = result.data
-        // the problem we use to hv is like everytime send a new message, the 
-        // old one dissapear, which mean it doesn't save it at all, that why we need getUserMessageByEmail
+    console.log(email,token)
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            if(resp.success){
+                var postarea = document.getElementById(wallId)
+                // get the wall that u wanna send the message to
+                removeAllChildElement(postarea)
+                // remove everything from postarea
+                console.log(resp.messages)
+                // the problem we use to hv is like everytime send a new message, the 
+                // old one dissapear, which mean it doesn't save it at all, that why we need getUserMessageByEmail
 
-        // get all the data that we upload before 
-        console.log(final_result)
-        for (i = 0; i < final_result.length; i++) {
-            var container = document.createElement('div')
-            container.className = "container"
-            // for email
-            var writer = document.createElement('p')
-            writer.className = "writer"
-            writer.innerHTML = final_result[i].writer
-            // giving value to the writer then push it into the wall
-            container.appendChild(writer)
-            // for messages
-            var content = document.createElement('p')
-            content.className = "content"
-            content.innerHTML = final_result[i].content
-            container.appendChild(content)
-            postarea.appendChild(container)
-            // {writer: 'jhech107@student.liu.se', content: 'hi'} two element in one
-            // 換行問題~~
+                // get all the data that we upload before 
+                for (i = 0; i < resp.messages.length; i++) {
+                    var container = document.createElement('div')
+                    container.className = "container"
 
+                    // for email
+                    var writer = document.createElement('p')
+                    writer.className = "writer"
+                    writer.innerHTML = resp.messages[i].email
+                    // giving value to the writer then push it into the wall
+                    container.appendChild(writer)
+                    // for messages
+                    var content = document.createElement('p')
+                    content.className = "content"
+                    content.innerHTML = resp.messages[i].message
+                    container.appendChild(content)
+                    postarea.appendChild(container)
+                    // {writer: 'jhech107@student.liu.se', content: 'hi'} two element in one
+                    // 換行問題~~
+                }
+            }
         }
     }
+    // console.log(result.success)
+    xml.open("GET","get_user_messages_by_email/" + email, true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader('Authorization', token);
+    xml.send();
 }
 
 function search_users(formData)
 {
     event.preventDefault()
-    var token = localStorage.getItem("token")
+    var token = JSON.parse(localStorage.getItem("token")).token
     var seeya = document.getElementById("contact")
     var useremail = formData.searching.value;
     // console.log("input", useremail)
-    const user = serverstub.getUserDataByEmail(token, useremail)
+    
     // console.log(user)
-    var usererror = document.getElementById("UsernotExist")
-    var Name = document.getElementById("Name_other")
-    var gender = document.getElementById("gender_other")
-    var city = document.getElementById("city_other")
-    var Country = document.getElementById("Country_other")
-    var Email = document.getElementById("Email_other")
-    if(user.success === true)
-    {               
-            var userData =user.data
-            // console.log(userData)
-            Name.textContent = userData.firstname +" "+ userData.familyname
-            gender.textContent = userData.gender
-            city.textContent = userData.city
-            Country.textContent = userData.country
-            Email.textContent = userData.email
-            toEmail = useremail
-            var browseview = document.getElementById("otherWall")
-            
-            browseview.style.display = "block"
-            seeya.style.display = "none"   
-            
-        
-    }  
-    else{
-        usererror.textContent = "User doesn't exist😢"
-        usererror.style.background = "white"
-        setTimeout(function () {
-            usererror.textContent = "";
-            usererror.style.background = "none"
-        }, 1500);
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var resp = JSON.parse(xml.responseText);
+            var usererror = document.getElementById("UsernotExist")
+            if (resp.success){
+
+                console.log(resp.message)
+                var Name = document.getElementById("Name_other")
+                var gender = document.getElementById("gender_other")
+                var city = document.getElementById("city_other")
+                var Country = document.getElementById("Country_other")
+                var Email = document.getElementById("Email_other")            
+                var userData = resp.data;
+                // console.log(userData)
+                Name.textContent = userData.firstname +" "+ userData.familyname
+                gender.textContent = userData.gender
+                city.textContent = userData.city
+                Country.textContent = userData.country
+                Email.textContent = userData.email
+                toEmail = useremail;
+                var browseview = document.getElementById("otherWall")
+                
+                browseview.style.display = "block"
+                seeya.style.display = "none"   
+            }else{
+                usererror.textContent = resp.message
+                usererror.style.background = "white"
+                setTimeout(function () {
+                    usererror.textContent = "";
+                    usererror.style.background = "none"
+                }, 1500);
+            }
+        }
     }
+    xml.open("GET","get_user_data_by_email/"+ useremail, true);
+    xml.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xml.setRequestHeader('Authorization', token);
+    xml.send();
+    
 }
 
 
