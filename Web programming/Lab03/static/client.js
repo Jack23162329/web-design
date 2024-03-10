@@ -1,25 +1,47 @@
 // displayView = function(view){
 //     document.getElementById("view").innerHTML = document.getElementById(view).innerHTML;
 //   }
+function View(name)
+{
+    var viewcontent = document.getElementById(name)
+    document.body.innerHTML = viewcontent.innerHTML
+}
 
-  function View(name)
-  {
-      var viewcontent = document.getElementById(name)
-      document.body.innerHTML = viewcontent.innerHTML
-  }
-// let userInfo;
-let toEmail = null
-let alertElement
+function clientSocket(){
+    var socket = new WebSocket("ws://"+ location.host +'/profileview');
+    // request from the server 
+    socket.onopen = function(){
+        var token = JSON.parse(localStorage.getItem("token")).token;
+        socket.send(token)
+    }
+    socket.onclose = function(){
+        socket = null
+    }
+    console.log('success')
+    // socket.onerror = function(error){
+    //     console.log("Ws Error: " + error);
+    // }
+    socket.addEventListener('message', (event)=>{
+        console.log(event.data);
+        if(event.data == "signout"){
+            localStorage.setItem('token', "");
+            View("welcomeview")
+        }
+    });
 
-
+}
 window.onload = function()
 {
     var token = localStorage.getItem("token")
+    
     console.log(token)
     // localStorage.removeItem("token");
     if(token){
+        // var email = JSON.parse(localStorage.getItem("token")).email
+        
         View("profileview")
         displaypage()
+        clientSocket()
         
     }else{
         View("welcomeview")
@@ -93,6 +115,7 @@ function signin(formData)
                 console.log(resp.message)
                 var newToken = {'email': email, 'token': resp.data}
                 localStorage.setItem("token",JSON.stringify(newToken))
+                clientSocket()
                 displaypage()
             }else{
                 message.textContent = resp.message;
@@ -175,6 +198,7 @@ function signout()
 
                     localStorage.removeItem("token");
                     View("welcomeview")
+                    
                     message.textContent = resp.message
                     message.style.backgroundColor = "white"
                     setTimeout(function () {
