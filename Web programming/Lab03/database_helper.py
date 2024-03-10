@@ -18,6 +18,14 @@ def disconnect_db():
     if db is not None:
         g.db.close()
         g.db = None
+
+# def init_db(app):
+#     with app.app_context():
+#         db = get_db()
+#         with app.open_resource('schema.sql', mode = 'r') as f:
+#             db.cursor().executescript(f.read())
+#         db.commit()
+
 #post users
 def Insert_user_into_users(email, password, firstname, familyname, gender, city, country):
    
@@ -105,6 +113,8 @@ def delete_user_from_loggedinusers(email):
     get_db().execute('DELETE FROM loggedinusers where email = ?', [email])
     get_db().commit()
     return True
+
+
 
 
 

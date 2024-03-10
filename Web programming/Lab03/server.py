@@ -1,16 +1,34 @@
 from flask import Flask, jsonify, request
 from random import randint
-
+from geventwebsocket.exceptions import WebSocketError
+from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
+from flask_sock import Sock
 
 
 import database_helper
 #inorder to get the fuction inside it
 
-
+sockets = {}
 app = Flask(__name__)
-
+sock = Sock(app)
+app.debug = True
 
 #  to avoid same email enroll multiple times
+@sock.route('/profileview')
+def socket_connect(ws):
+    print(sockets)
+    while True:
+        # print("hello darling")
+        token = ws.receive()
+        print("lets go: " + token)
+        email = database_helper.get_email_from_loggedinusers(token)
+        if email:
+            sockets[email] = ws
+            print(sockets)
+            print("email added in ws")
+        else:
+            print("email not found")
 
 
 @app.teardown_request
@@ -26,7 +44,6 @@ def welcomeview():
 def sign_up():
     data = request.get_json()
     email = data['email']
-
     # if user not exists
     if email != "" and email is not None:
         if database_helper.validemail(email):
@@ -156,7 +173,7 @@ def Post_message():
         return jsonify({'success': False, 'message':"Empty messages"})
     
     fromEmail = database_helper.get_email_from_loggedinusers(token)
-    print(fromEmail,toEmail);
+    # print(fromEmail,toEmail);
     
     LoggedIn = database_helper.Get_token_from_loggedinusers(token)
 
@@ -223,4 +240,6 @@ def Sign_out():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # http_server = WSGIServer(('',5000),app,handler_class = WebSocketHandler)
+    # http_server.serve_forever()
+    app.run()
