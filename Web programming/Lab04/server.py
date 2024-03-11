@@ -85,18 +85,25 @@ def sign_in():
 
     # if (passwords == "" or passwords is None):
     #     return jsonify({'success': False, 'message': "Can't input empty passwords"})
-    
-    
     if database_helper.validemail(username):
         user_data = database_helper.Get_user_from_users(username)
         if user_data is not None:
             if user_data['password'] == passwords:
+                if username in sockets:
+                    other_ws = sockets[username]
+                    other_ws.send('signout')
+                    database_helper.delete_user_from_loggedinusers(username)
+                    del sockets[username]
+                    print(sockets)
                 letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
                 token = ''
                 for i in range(0, 36):
                     token += letters[randint(0, len(letters) - 1)]
                 
                 result =  database_helper.Insert_Data_into_loggedinusers(username, token)
+                # sockets[username].send()
+                # del  sockets[username]
+                # print(sockets)
                 if result is True:
                     return jsonify({"success": True, 'message': "User successfully singed in😘", 'data': token}), 200
                 else:
