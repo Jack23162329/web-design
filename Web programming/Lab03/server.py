@@ -87,6 +87,12 @@ def sign_in():
     user_data = database_helper.Get_user_from_users(username)
     if user_data is not None:
         if user_data['password'] == passwords:
+            if username in sockets:
+                    other_ws = sockets[username]
+                    other_ws.send('signout')
+                    database_helper.delete_user_from_loggedinusers(username)
+                    del sockets[username]
+                    print(sockets)
             letters = "abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
             token = ''
             for i in range(0, 36):
