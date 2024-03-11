@@ -38,7 +38,7 @@
                     </div>
 
                     <form onsubmit = "uploadmessage('postOwnMessage'); return false;">
-                        <textarea id = "postOwnMessage" class = "textarea" row ="10" cols = "50" placeholder = "Write sth here😊" required></textarea>
+                        <textarea id = "postOwnMessage" class = "textarea" ondrop = "drop(event)" ondragover = "allowDrop(event)" row ="10" cols = "50" placeholder = "Write sth here😊" required></textarea>
                         <input type = "submit" class = "bottom3" id = "bottom3" value = "upload" >
                     </form>
                     

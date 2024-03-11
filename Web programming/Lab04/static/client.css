@@ -439,6 +439,7 @@ h2
     background: white;
     font-size: 1.1em;
     color: #162938; 
+    cursor:pointer;
 
 }
 .content::before

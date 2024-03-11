@@ -17,12 +17,12 @@ function clientSocket(){
     socket.onclose = function(){
         socket = null
     }
+    // socket.onmessage
     // console.log('success')
     // socket.onerror = function(error){
     //     console.log("Ws Error: " + error);
     // }
     socket.addEventListener('message', (event)=>{
-        console.log(event.data);
         if(event.data == "signout"){
             localStorage.setItem('token', "");
             View("welcomeview")
@@ -450,9 +450,16 @@ function refreshbottom(wallId, dare)
                     // for messages
                     var content = document.createElement('p')
                     content.className = "content"
+                    content.id = "drag"
+                    content.draggable = "true"
+                    content.ondragstart = "drag(event)"
+
+
+                    // content.ondrop() = "drop(event)"
                     content.innerHTML = resp.messages[i].message
                     container.appendChild(content)
                     postarea.appendChild(container)
+
                     // {writer: 'jhech107@student.liu.se', content: 'hi'} two element in one
                     // 換行問題~~
                 }
@@ -631,3 +638,19 @@ function displayaccountpage()
     bye_bye.addEventListener("click", signout)
 }
 
+// drag & drop function
+function allowDrop(ev){
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    console.log(data)
+    ev.target.appendChild(document.getElementById(data));
+
+}
