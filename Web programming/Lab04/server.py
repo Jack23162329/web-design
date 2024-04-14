@@ -23,7 +23,7 @@ def socket_connect(ws):
     while True:
         # print("hello darling")
         token = ws.receive()
-        print("lets go: " + token)
+        print(token)
         email = database_helper.get_email_from_loggedinusers(token)
         if email:
             sockets[email] = ws
@@ -229,7 +229,10 @@ def getusermessagebyemail(email):
         exist_user = database_helper.Get_user_from_users(email)
         if exist_user:
             User_message = database_helper.get_message_from_email(email)
-            return jsonify({'success': True, 'message': "successfully retrieved user messages !", 'messages': User_message}), 200
+            if User_message:
+                return jsonify({'success': True, 'message': "got u !", 'messages': User_message}), 200
+            else:
+                return "", 401
         else:
             return jsonify({'success': False,'message': "User doesn't exist"}), 404
     return jsonify({'success': False, 'message': "You are not log in ~~"}), 401

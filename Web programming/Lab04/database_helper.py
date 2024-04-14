@@ -103,10 +103,13 @@ def get_message_from_email(toEmail):
     rows = cursor.fetchall()
     cursor.close()
     result = []
-    for i in range(len(rows)):
-        result.append({'email': rows[i][1], 'message': rows[i][3]})
-        
-    return result
+    if result != "":
+        for i in range(len(rows)):
+            result.append({'email': rows[i][1], 'message': rows[i][3]})
+            
+        return result
+    else:
+        return False
 
 #removeUsers
 def delete_user_from_loggedinusers(email):
