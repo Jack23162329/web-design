@@ -30,7 +30,7 @@
                 <!-- ------------------------Home Page------------------------------- -->
                 <div class="home">
                     <div class="information">
-                        <p>Name: <span id = "Name"></span><p>
+                        <p>Name: <span id = "Name" draggable = "true" ondragstart = "drag(event)"></span><p>
                         <p>gender: <span id = "gender"></span><p>
                         <p>City: <span id = "city"></span><p>
                         <p>Country: <span id = "Country"></span><p>
@@ -48,7 +48,7 @@
                     <button class="refresh-bottom" id="bottom4" onclick="refreshbottom('output-wall', 'ownWall')">Reload your Wall</button>
                     
 
-
+                    <div class="Hclient" id  = "Hclient"></div>
                     <div class="wall" id = "output-wall"></div>
                     
                     
@@ -70,6 +70,7 @@
                         <input type = "submit" class = "search-button" 
                         id = "bottom5" value = "search!😊">
                         <div class="UsernotExist" id = "UsernotExist"></div>
+                        
                     </form>
                 </div>
 

@@ -1,6 +1,28 @@
 // displayView = function(view){
 //     document.getElementById("view").innerHTML = document.getElementById(view).innerHTML;
 //   }
+// drag & drop function
+function allowDrop(ev){
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerHTML);
+    console.log(ev.target.id)
+    console.log(ev.target)
+
+    // assume we'll get drag
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    console.log(data)
+    var word = document.createElement('p')
+    word.innerHTML = data
+    ev.target.innerHTML = word.innerHTML;
+
+}
 function View(name)
 {   
     var viewcontent = document.getElementById(name)
@@ -18,9 +40,8 @@ function clientSocket(){
         socket = null
     }
     // socket.onmessage
-    // console.log('success')
+
     // socket.onerror = function(error){
-    //     console.log("Ws Error: " + error);
     // }
     socket.addEventListener('message', (event)=>{
         if(event.data == "signout"){
@@ -34,7 +55,7 @@ window.onload = function()
 {
     var token = localStorage.getItem("token")
     
-    // console.log(token)
+
     // localStorage.removeItem("token");
     if(token){
         // var email = JSON.parse(localStorage.getItem("token")).email
@@ -54,7 +75,6 @@ function signupvalidation(formData)
     var password = formData.s_password.value
     var confirm_password = formData.c_password.value
     
-    // console.log(password, confirm_password)
     var message = document.getElementById("message")
 
     if(password == confirm_password){
@@ -74,7 +94,7 @@ function signupvalidation(formData)
     xml.onreadystatechange = function(){
         // 4 : request finished and response is ready, 200: 'OK'
         // this == xml
-        if(this.readyState == 4){ 
+        if(this.readyState == 4 ){ 
             var resp = JSON.parse(xml.responseText);
             if (this.status == 201){
                 message.textContent = "New User Created";
@@ -137,7 +157,6 @@ function signin(formData)
         if(this.readyState == 4){
             var resp = JSON.parse(xml.responseText);
             if (this.status == 200){
-                // console.log(resp.message)
                 var newToken = {'email': email, 'token': resp.data}
                 localStorage.setItem("token",JSON.stringify(newToken))
                 clientSocket()
@@ -212,7 +231,7 @@ function displayHometab()
         if(this.readyState == 4 ){
             var resp = JSON.parse(xml.responseText);
             if (this.status == 200){
-                console.log(resp.message)
+                upload_comment("Sign in successfully")
                 var Name = document.getElementById("Name")
                 var gender = document.getElementById("gender")
                 var city = document.getElementById("city")
@@ -227,10 +246,10 @@ function displayHometab()
     
             }
             else if (this.status == 401){ 
-                console.log(resp.message)
+                upload_comment(resp.message)
             }
             else if (this.status == 404){
-                console.log("Failed to load info!")
+                upload_comment("Failed to load info~")
             }
         }
     }
@@ -248,14 +267,13 @@ function signout()
         var email = JSON.parse(localStorage.getItem("token")).email;
 
         
-        console.log(token, email)
+
         // var sign_out = serverstub.signOut(token)
         var xml = new XMLHttpRequest();
         xml.onreadystatechange = function(){
             if(this.readyState == 4){
                 var resp = JSON.parse(xml.responseText)
                 if (this.status == 200){
-                    console.log(resp.message)
 
                     localStorage.removeItem("token");
                     View("welcomeview")
@@ -364,7 +382,18 @@ function changePassword(formData)
 
 
 }
-
+function upload_comment(content){
+    var wrongmessage = document.getElementById("Hclient")
+    if (content){
+        wrongmessage.textContent = content
+        setTimeout(function () {
+            wrongmessage.textContent = "";
+        }, 1500);
+    }
+    else{
+        return
+    }
+}
 function uploadmessage(messageId)
 {
     //get post message content
@@ -372,7 +401,6 @@ function uploadmessage(messageId)
     
     var token = JSON.parse(localStorage.getItem("token")).token
     var User_email = JSON.parse(localStorage.getItem("token")).email
-    // console.log(User_email, messageId)
     let email;
     // === call strict equality operator, even the type needs to be the same!!
     // ex. 1 === 1 (true)
@@ -384,21 +412,21 @@ function uploadmessage(messageId)
     else{
         email = toEmail
     }
-    // console.log(token, email, message)
+
     var xml = new XMLHttpRequest();
     xml.onreadystatechange = function(){
         if(this.readyState == 4){
             var resp = JSON.parse(xml.responseText);
             if(this.status == 201){
-                console.log(resp.message)
+                upload_comment(resp.message)
             }else if(this.status == 400){
-                console.log(resp.message)
+                upload_comment(resp.message)
             }else if(this.status == 401){
-                console.log(resp.message)
+                upload_comment(resp.message)
             }else if(this.status == 405){
-                console.log("Method doesn't allowed")
+                upload_comment("Method doesn't allowed")
             }else if(this.status == 500){
-                console.log("okay lol")
+                upload_comment("okay lol")
             }
         }
     }
@@ -422,7 +450,7 @@ function refreshbottom(wallId, dare)
     else if(dare == 'otherWall'){
         email = toEmail;
     }
-    // console.log(email,token)
+
     var xml = new XMLHttpRequest();
     xml.onreadystatechange = function(){
         if(this.readyState == 4){
@@ -432,7 +460,7 @@ function refreshbottom(wallId, dare)
                 // get the wall that u wanna send the message to
                 removeAllChildElement(postarea)
                 // remove everything from postarea
-                console.log(resp.message)
+                upload_comment(resp.message)
                 // the problem we use to hv is like everytime send a new message, the 
                 // old one dissapear, which mean it doesn't save it at all, that why we need getUserMessageByEmail
 
@@ -445,18 +473,23 @@ function refreshbottom(wallId, dare)
                     var writer = document.createElement('p')
                     writer.className = "writer"
                     writer.innerHTML = resp.messages[i].email
+                    writer.id = "drag1"
+                    writer.draggable = "true"
+                    writer.ondragstart = "drag(event)"
                     // giving value to the writer then push it into the wall
                     container.appendChild(writer)
                     // for messages
                     var content = document.createElement('p')
                     content.className = "content"
-                    content.id = "drag"
-                    content.draggable = "true"
-                    content.ondragstart = "drag(event)"
+                    console.log(content)
 
 
                     // content.ondrop() = "drop(event)"
                     content.innerHTML = resp.messages[i].message
+                    content.id = "drag2"
+                    content.draggable = "true"
+                    content.ondragstart = "drag(event)"
+                    
                     container.appendChild(content)
                     postarea.appendChild(container)
 
@@ -464,50 +497,53 @@ function refreshbottom(wallId, dare)
                     // 換行問題~~
                 }
             }
-
+            else if (this.status == 400){
+                upload_comment("your wall is empty...")
+            }
             else if(this.status == 401){
-                console.log(resp.message)
+                upload_comment(resp.message)
             }
 
             else if(this.status == 404){
-                console.log(resp.message)
+                upload_comment(resp.message)
             }
             else if (this.status == 405){
-                console.log("Method doesn't allowed")
+                upload_comment("Method doesn't allowed")
             }
             else if (this.status == 500){
-                console.log("how laaa")
+                upload_comment("how laaa")
             }
         }
     }
-    // console.log(result.success)
+
     xml.open("GET","get_user_messages_by_email/" + email, true);
     xml.setRequestHeader('Content-type','application/json; charset=utf-8');
     xml.setRequestHeader('Authorization', token);
     xml.send();
 }
 
+function search_comment(content){
+    var usererror = document.getElementById("UsernotExist")
+    usererror.textContent = content
+    setTimeout(function () {
+        usererror.textContent = "";
+        usererror.style.background = "none"
+    }, 1500);
+}
 function search_users(formData)
 {
     event.preventDefault()
     var token = JSON.parse(localStorage.getItem("token")).token
     var seeya = document.getElementById("contact")
     var useremail = formData.searching.value;
-    // console.log("input", useremail)
-    
-    // console.log(user)
+
     var xml = new XMLHttpRequest();
     xml.onreadystatechange = function(){
         if(this.readyState == 4){
             var resp = JSON.parse(xml.responseText);
-            var usererror = document.getElementById("UsernotExist")
+            
             if (this.status == 200){
-                usererror.textContent = "it's him!!"
-                usererror.style.background = "white"
-                setTimeout(function () {
-                    usererror.textContent = "";
-                    usererror.style.background = "none"
-                }, 1500);
+                search_comment("it's him!!")
                 
                 var Name = document.getElementById("Name_other")
                 var gender = document.getElementById("gender_other")
@@ -515,7 +551,6 @@ function search_users(formData)
                 var Country = document.getElementById("Country_other")
                 var Email = document.getElementById("Email_other")            
                 var userData = resp.data;
-                // console.log(userData)
                 Name.textContent = userData.firstname +" "+ userData.familyname
                 gender.textContent = userData.gender
                 city.textContent = userData.city
@@ -528,25 +563,15 @@ function search_users(formData)
                 seeya.style.display = "none" 
 
             }else if(this.status == 404){
-                usererror.textContent = resp.message
-                usererror.style.background = "white"
-                setTimeout(function () {
-                    usererror.textContent = "";
-                    usererror.style.background = "none"
-                }, 1500);
+                search_comment(resp.message)
             }else if(this.status == 401){
-                usererror.textContent = resp.message
-                usererror.style.background = "white"
-                setTimeout(function () {
-                    usererror.textContent = "";
-                    usererror.style.background = "none"
-                }, 1500);
+                search_comment(resp.message)
             }
             else if(this.status == 405){
-                console.log("Method doesn't allowed")
+                search_comment("Method doesn't allowed")
             }
             else if (this.status == 500){
-                console.log("what are u doint la lol")
+                search_comment("what ar u doing la lol")
             }
         }
     }
@@ -638,19 +663,3 @@ function displayaccountpage()
     bye_bye.addEventListener("click", signout)
 }
 
-// drag & drop function
-function allowDrop(ev){
-    ev.preventDefault();
-}
-
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    console.log(data)
-    ev.target.appendChild(document.getElementById(data));
-
-}
